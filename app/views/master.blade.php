@@ -235,8 +235,21 @@
       <div class="container">
           <br />
           <ul class="list-inline">
-            <li><a href="{{{ route('home') }}}"><i class="fa fa-home fa-2x"></i></a></li>
-            <li><a href="https://www.facebook.com/k2movie" target="_blank"><i class="fa fa-facebook-square fa-2x"></i></a></li>
+            <li>
+              <a href="{{{ route('home') }}}">
+                <i class="fa fa-home fa-2x"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.facebook.com/k2movie" target="_blank">
+                <i class="fa fa-facebook-square fa-2x"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://plus.google.com/u/0/111168861419019938542" target="_blank">
+                <i class="fa fa-google-plus-square fa-2x"></i>
+              </a>
+            </li>
             <li class="pull-right">
               <p>Developed by <a href="http://www.k2studio.net" target="_blank">k2studio</a></p>
             </li>
