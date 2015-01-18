@@ -18,9 +18,13 @@
 			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
+
 	</head>
 	<body>
 
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <!-- social plugins script -->
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
@@ -29,6 +33,9 @@
       js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=1017727724907570&version=v2.0";
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- /script for social plugins -->
 
 		<div class="container">
 
@@ -56,6 +63,16 @@
                 {{ Form::button('<i class="fa fa-search"></i>', ['type' => 'submit', 'class' => 'btn btn-info']) }}
                 {{ Form::close() }}
               </div>
+              <div align="center" class="navbar-form navbar-left">
+                <!-- k2movie fb follow button -->
+                <div class="fb-follow" data-href="https://www.facebook.com/k2movie" data-colorscheme="light" data-layout="button" data-show-faces="false"></div>
+                <!-- /k2movie fb follow button -->
+              </div>
+              <div align="center" class="navbar-form navbar-left">
+                <!-- k2movie g+ follow button -->
+                <div class="g-follow" data-annotation="none" data-height="20" data-href="//plus.google.com/u/0/111168861419019938542" data-rel="publisher"></div>
+                <!-- /k2movie g+ follow button -->
+              </div>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li align="center" class="dropdown">
@@ -79,18 +96,15 @@
         <!-- left-sidebar -->
         <div class="col-md-3">
 
-          <!-- k2movie left side bar fb-box -->
+          <!-- k2movie left side bar ads 1 -->
           <div class="row" align="center">
-            <div class="fb-like-box" data-href="https://www.facebook.com/k2movie" data-colorscheme="light" data-show-faces="false" data-header="false" data-stream="false" data-show-border="false"></div>
+            <ins class="adsbygoogle"
+               style="display:inline-block;width:300px;height:250px"
+               data-ad-client="ca-pub-8589996867980267"
+               data-ad-slot="1203069039"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
           </div>
-          <!-- /k2movie left side bar fb-box -->
-
-          <!-- k2movie left side bar g+ box -->
-          <div class="row" align="center">
-            <script src="https://apis.google.com/js/platform.js" async defer></script>
-            <div class="g-page" data-width="273" data-href="//plus.google.com/u/0/111168861419019938542" data-layout="landscape" data-rel="publisher"></div>
-          </div>
-          <!-- /k2movie left side bar g+ box -->
+          <!-- /k2movie left side bar ads 1 -->
 
           <br />
 
@@ -117,18 +131,15 @@
             </div>
           </div>
 
-          <!-- k2movie left side bar ads -->
+          <!-- k2movie left side bar ads 2 -->
           <div class="row" align="center">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <ins class="adsbygoogle"
                  style="display:inline-block;width:300px;height:250px"
                  data-ad-client="ca-pub-8589996867980267"
                  data-ad-slot="5633268636"></ins>
-            <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
           </div>
-          <!-- /k2movie left side bar ads -->
+          <!-- /k2movie left side bar ads 2 -->
 
           <br />
 
@@ -145,18 +156,15 @@
             </div>
           </div>
 
-          <!-- k2movie left side bar ads 2 -->
+          <!-- k2movie left side bar ads 3 -->
           <div class="row" align="center">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <ins class="adsbygoogle"
                  style="display:inline-block;width:300px;height:250px"
                  data-ad-client="ca-pub-8589996867980267"
-                 data-ad-slot="5633268636"></ins>
-            <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+                 data-ad-slot="7515994236"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
           </div>
-          <!-- /k2movie left side bar ads 2 -->
+          <!-- /k2movie left side bar ads 3 -->
 
           <br />
 
@@ -203,37 +211,15 @@
       </div>
 
       <div class="row">
-        <div class="col-md-3" align="center">
-
-          <div class="row" align="left">
-            <!-- k2movie btm banner fb-follow button -->
-            <div class="fb-follow" data-href="https://www.facebook.com/k2movie" data-colorscheme="light" data-layout="standard" data-show-faces="false"></div>
-            <!-- /k2movie btm banner fb-follow button -->
-          </div>
-
-          <br />
-
-          <div class="row" align="left">
-            <!-- k2movie btm banner g+ follow button -->
-            <div class="g-follow" data-annotation="bubble" data-height="20" data-href="//plus.google.com/u/0/111168861419019938542" data-rel="publisher"></div>
-            <!-- /k2movie btm banner g+ follow button -->
-          </div>
-
-        </div>
-
+        <div class="col-md-3" align="center"></div>
         <div class="col-md-9" align="center">
 
-          <br />
-
           <!-- k2movie btm banner ads -->
-          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
           <ins class="adsbygoogle"
                style="display:inline-block;width:728px;height:90px"
                data-ad-client="ca-pub-8589996867980267"
                data-ad-slot="1490773837"></ins>
-          <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
           <!-- /k2movie btm banner ads -->
 
         </div>
