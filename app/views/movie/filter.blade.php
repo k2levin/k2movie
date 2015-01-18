@@ -25,7 +25,7 @@
 	    @foreach($Movies as $Movie)
 			<div class="col-md-2" align="center">
 				<a href="{{{ route('movie.description', [$Movie->link]) }}}">
-					<img src="{{{ asset('/img/'.$Movie->link.'.jpg') }}}" alt="{{{ $Movie->name }}}" width="110" heigh="154">
+					<img src="{{{ asset('http://cdn-k2movie.k2studio.net/img/'.$Movie->link.'.jpg') }}}" alt="{{{ $Movie->name }}}" width="110" heigh="154">
 					<div class="movie-title-p">
 						<p class="text-center">{{{ $Movie->name }}}</p>
 					</div>

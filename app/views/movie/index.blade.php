@@ -11,17 +11,17 @@
 		<div class="carousel-inner" role="listbox">
 			<div class="item active" align="center">
 				<a href="{{{ route('movie.description', [$Carousel_Movies[0]->link]) }}}">
-					<img src="{{{ asset('/img/'.$Carousel_Movies[0]->link.'.jpg') }}}" alt="Second slide" width="214" heigh="300">
+					<img src="{{{ asset('http://cdn-k2movie.k2studio.net/img/'.$Carousel_Movies[0]->link.'.jpg') }}}" alt="Second slide" width="214" heigh="300">
 				</a>
 			</div>
 			<div class="item" align="center">
 				<a href="{{{ route('movie.description', [$Carousel_Movies[1]->link]) }}}">
-					<img src="{{{ asset('/img/'.$Carousel_Movies[1]->link.'.jpg') }}}" alt="Second slide" width="214" heigh="300">
+					<img src="{{{ asset('http://cdn-k2movie.k2studio.net/img/'.$Carousel_Movies[1]->link.'.jpg') }}}" alt="Second slide" width="214" heigh="300">
 				</a>
 			</div>
 			<div class="item" align="center">
 				<a href="{{{ route('movie.description', [$Carousel_Movies[2]->link]) }}}">
-					<img src="{{{ asset('/img/'.$Carousel_Movies[2]->link.'.jpg') }}}" alt="Second slide" width="214" heigh="300">
+					<img src="{{{ asset('http://cdn-k2movie.k2studio.net/img/'.$Carousel_Movies[2]->link.'.jpg') }}}" alt="Second slide" width="214" heigh="300">
 				</a>
 			</div>
 		</div>
@@ -56,7 +56,7 @@
 	    @foreach($Movies as $Movie)
 			<div class="col-md-2" align="center">
 				<a href="{{{ route('movie.description', [$Movie->link]) }}}">
-					<img src="{{{ asset('/img/'.$Movie->link.'.jpg') }}}" alt="{{{ $Movie->name }}}" width="110" heigh="154">
+					<img src="{{{ asset('http://cdn-k2movie.k2studio.net/img/'.$Movie->link.'.jpg') }}}" alt="{{{ $Movie->name }}}" width="110" heigh="154">
 					<div class="movie-title-p">
 						<p class="text-center">{{{ $Movie->name }}}</p>
 					</div>
