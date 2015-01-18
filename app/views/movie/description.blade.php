@@ -20,7 +20,7 @@
 
     <div class="row">
         <div class="col-md-4">
-        	<img src="{{{ 'http://cdn-k2movie.k2studio.net/img/'.$Movies->link.'.jpg' }}}" alt="{{{ $Movies->name }}}" width="214" heigh="300">
+        	<img src="{{{ '//cdn-k2movie.k2studio.net/img/'.$Movies->link.'.jpg' }}}" alt="{{{ $Movies->name }}}" width="214" heigh="300">
         </div>
 
         <div class="col-md-8">
