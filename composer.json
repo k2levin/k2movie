@@ -1,7 +1,7 @@
 {
 	"name": "k2levin/k2movie",
-	"description": "POC / prototype for sharing video..",
-	"keywords": ["movie", "sharing"],
+	"description": "POC / prototype for movie listing..",
+	"keywords": ["movie", "listing"],
 	"license": "Apache License, Version 2.0",
 	"type": "project",
 	"require": {

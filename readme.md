@@ -1,4 +1,4 @@
 k2movie
 =======
 
-POC / prototype for sharing video..
+POC / prototype for movie listing..
