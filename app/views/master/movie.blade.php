@@ -5,11 +5,11 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>k2movie</title>
+    @yield('title')
 
 		<!-- using Bootswatch - Spacelab -->
 		<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.1/spacelab/bootstrap.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -17,7 +17,6 @@
 			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
-
 	</head>
 	<body>
 
@@ -74,17 +73,30 @@
               </div>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li align="center" class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-bolt fa-lg"></i> <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li class="text-center"><a href="#"><i class="fa fa-info fa-lg"></i> N/A</a></li>
-                  <li class="text-center"><a href="#"><i class="fa fa-cog fa-lg"></i> N/A</a></li>
-                  <li class="divider"></li>
-                  <li class="text-center"><a href="#"><i class="fa fa-sign-out fa-lg"></i> N/A</a></li>
-                </ul>
-              </li>
+              @if(Auth::check())
+                <li align="center" class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-user fa-lg"></i> User
+                    <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li class="text-center">
+                      <a href="{{{ route('user.profile') }}}"><i class="fa fa-info fa-lg"></i> Profile</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="text-center">
+                      <a href="{{{ route('user.logout') }}}"><i class="fa fa-sign-out fa-lg"></i> Logout</a>
+                    </li>
+                  </ul>
+                </li>
+              @else
+                <li align="center">
+                  <a href="{{{ route('user.login') }}}"><i class="fa fa-sign-in fa-lg"></i> Login</a>
+                </li>
+                <li align="center">
+                  <a href="{{{ route('user.register') }}}"><i class="fa fa-user-plus fa-lg"></i> Register</a>
+                </li>
+              @endif
             </ul>
           </div>
         </div>

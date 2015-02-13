@@ -1,4 +1,10 @@
-@extends('master')
+@extends('master.movie')
+
+@section('title')
+
+    <title>k2movie - {{{ $Movies->name.' '.$movie_year }}}</title>
+
+@stop
 
 @section('content')
 

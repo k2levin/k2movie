@@ -1,6 +1,24 @@
-@extends('master')
+@extends('master.movie')
+
+@section('title')
+
+    <title>k2movie</title>
+
+@stop
 
 @section('content')
+
+	@if(Session::has('flash_notice'))
+		<div class="alert alert-info page-alert">
+    		{{ Session::get('flash_notice') }}
+	    </div>
+	@endif
+
+	@if(Session::has('flash_error'))
+		<div class="alert alert-danger page-alert">
+    		{{ Session::get('flash_error') }}
+	    </div>
+	@endif
 
 	<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 		<ol class="carousel-indicators">

@@ -24,7 +24,7 @@
 				    <h1 align="center"><strong>Website is now under maintenance</strong></h1>
 				    <hr /><br />
 			        <h3 align="center">Sorry for the inconvenience but we're performing some maintenance at the moment.</h3>
-			        <h3 align="center">If you need, you can always <a href="mailto:k2leving@gmail.com">contact us</a>, otherwise we'll be back online shortly!</h3>
+			        <h3 align="center">If you need, you can always <a href="mailto:k2levin@k2studio.net">contact us</a>, otherwise we'll be back online shortly!</h3>
 			        <p align="center">- k2studio</p>
 				</div>
 			</div>
