@@ -14,10 +14,10 @@
 	    </div>
 	@endif
 
-	@if(Session::has('flash_error'))
+	@if($errors->first())
 		<div class="alert alert-danger page-alert">
-    		{{ Session::get('flash_error') }}
-	    </div>
+			{{ $errors->first() }}
+		</div>
 	@endif
 
 	<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">

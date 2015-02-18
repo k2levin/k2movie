@@ -9,13 +9,23 @@ class ReminderController extends Controller {
 
 	public function postRemind()
 	{
-		switch ($response = Password::remind(Input::only('email'), function($message)
+		Queue::push(function()
+		{
+			$response = Password::remind(Input::only('email'), function($message)
+			{
+				$message->subject('Password Reminder');
+			});
+		});
+
+		$response = Password::remind(Input::only('email'), function($message)
 		{
 			$message->subject('Password Reminder');
-		}))
+		});
+
+		switch ($response)
 		{
 			case Password::INVALID_USER:
-				return Redirect::back()->withInput()->with('flash_error', Lang::get($response));
+				return Redirect::back()->withInput()->withErrors(['flash_error'=>Lang::get($response)]);
 
 			case Password::REMINDER_SENT:
 				return Redirect::back()->withInput()->with('flash_notice', Lang::get($response));
@@ -47,10 +57,10 @@ class ReminderController extends Controller {
 			case Password::INVALID_PASSWORD:
 			case Password::INVALID_TOKEN:
 			case Password::INVALID_USER:
-				return Redirect::back()->withInput()->with('flash_error', Lang::get($response));
+				return Redirect::back()->withInput()->withErrors(['flash_error'=>Lang::get($response)]);
 
 			case Password::PASSWORD_RESET:
-				return Redirect::to('/')->with('flash_notice', 'User Password Reset Successfully');;
+				return Redirect::route('user.login')->with('flash_notice', 'User Password Reset Successfully');
 		}
 	}
 

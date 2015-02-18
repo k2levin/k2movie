@@ -13,10 +13,10 @@ Route::get('mobile', function() {
 });
 
 // User
-// Route::get('test/email', ['as'=>'test.email', 'uses'=>'TestController@test_email']);
-
 Route::get('user/register', ['as'=>'user.register', 'uses'=>'UserController@register']);
 Route::post('user/register', ['as'=>'user.register', 'before'=>'csrf', 'uses'=>'UserController@post_register']);
+
+Route::get('user/activate/{confirmation_code}', ['as'=>'user.activate', 'uses'=>'UserController@activate']);
 
 Route::get('user/login', ['as'=>'user.login', 'uses'=>'UserController@login']);
 Route::post('user/login', ['as'=>'user.login', 'before'=>'csrf', 'uses'=>'UserController@post_login']);

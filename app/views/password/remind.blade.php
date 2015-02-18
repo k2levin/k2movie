@@ -22,11 +22,9 @@
 			    </div>
 			@endif
 
-			@if(Session::has('flash_error'))
-				<div class="page-alerts">
-					<div class="alert alert-danger page-alert">
-			    		{{ Session::get('flash_error') }}
-				    </div>
+			@if($errors->first())
+				<div class="alert alert-danger page-alert">
+					{{ $errors->first() }}
 				</div>
 			@endif
 

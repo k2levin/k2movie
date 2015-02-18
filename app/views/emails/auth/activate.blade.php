@@ -9,7 +9,7 @@
 		<p>Greetings,</p>
 		<br />
 		<p>This email is sent to you because of requsting for your account activation.</p>
-		<p>To activate your account, please click <a href="{{ URL::to('', array($abc)) }}">HERE</a>.</p>
+		<p>To activate your account, please click <a href="{{ URL::to('user/activate', array($confirmation_code)) }}">HERE</a>.</p>
 		<br/>
 		<p>This link will expire in {{ Config::get('auth.reminder.expire', 60) }} minutes.</p>
 		<br />

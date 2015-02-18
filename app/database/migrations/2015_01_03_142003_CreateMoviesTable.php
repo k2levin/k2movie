@@ -18,8 +18,8 @@ class CreateMoviesTable extends Migration {
 			$table->string('link'); // from-vegas-to-macau
 			$table->string('drive_link');
 			$table->string('category'); // anime, action, comedy, http://en.wikipedia.org/wiki/Outline_of_film
-			$table->boolean('latest');
-			$table->boolean('popular');
+			$table->boolean('latest')->default(0);
+			$table->boolean('popular')->default(0);
 			$table->string('language'); // english, chinese
 			$table->timestamps();
 		});

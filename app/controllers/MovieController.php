@@ -12,8 +12,7 @@ class MovieController extends BaseController {
 		$carousel_num = mt_rand(1, $popular_count-3);
 		$Carousel_Movies = Movie::where('popular', '=', '1')->skip($carousel_num)->take(3)->get();
 
-		return View::make('movie.index')
-			->with(compact('Movies', 'Carousel_Movies'));
+		return View::make('movie.index')->with(compact('Movies', 'Carousel_Movies'));
 	}
 
 	public function search()
@@ -25,10 +24,15 @@ class MovieController extends BaseController {
 			array($query)
 		)->paginate($this->pagination_num);
 
-		$field = Input::get('query');
+		$movies_count = $Movies->count();
 
-		return View::make('movie.filter')
-			->with(compact('Movies', 'field'));
+		if($movies_count === 0) {
+			$field = 'Search not found';
+		} else {
+			$field = Input::get('query');
+		}
+
+		return View::make('movie.filter')->with(compact('Movies', 'field'));
 	}
 
 	public function filter($field, $param)
@@ -42,8 +46,7 @@ class MovieController extends BaseController {
 			$field = ucwords($param);
 		}
 
-		return View::make('movie.filter')
-			->with(compact('Movies', 'field'));
+		return View::make('movie.filter')->with(compact('Movies', 'field'));
 	}
 
 	public function description($movie_link)
@@ -56,8 +59,7 @@ class MovieController extends BaseController {
 			$movie_year = '('.$Movies->year.')';
 		}
 
-		return View::make('movie.description')
-			->with(compact('Movies', 'movie_year'));
+		return View::make('movie.description')->with(compact('Movies', 'movie_year'));
 	}
 
 	public function preview($movie_link)
@@ -70,8 +72,7 @@ class MovieController extends BaseController {
 			$movie_year = '('.$Movies->year.')';
 		}
 
-		return View::make('movie.preview')
-			->with(compact('Movies', 'movie_year'));
+		return View::make('movie.preview')->with(compact('Movies', 'movie_year'));
 	}
 
 }

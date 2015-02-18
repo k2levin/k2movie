@@ -16,8 +16,16 @@
 
 			<hr />
 
-			<p>Name: {{{ $name }}}</p>
-			<p>Email: {{{ $email }}}</p>
+			<table class="table table-hover">
+				<tr>
+					<td align="right">Name: </td>
+					<td>{{{ $name }}}</td>
+				</tr>
+				<tr>
+					<td align="right">Email: </td>
+					<td>{{{ $email }}}</td>
+				</tr>
+			</table>
 
 		</div>
 		<div class="col-md-3"></div>

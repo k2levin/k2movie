@@ -16,11 +16,9 @@
 
 			<hr />
 
-			@if(Session::has('flash_error'))
-				<div class="page-alerts">
-					<div class="alert alert-danger page-alert">
-			    		{{ Session::get('flash_error') }}
-				    </div>
+			@if($errors->first())
+				<div class="alert alert-danger page-alert">
+					{{ $errors->first() }}
 				</div>
 			@endif
 
@@ -36,6 +34,10 @@
 			  <div class="form-group">
 			  	{{ Form::label('password', 'Password') }}
 			  	{{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Enter password']) }}
+			  </div>
+			  <div class="form-group">
+			  	{{ Form::label('password_confirmation', 'Confirm Password') }}
+			  	{{ Form::password('password_confirmation', ['class'=>'form-control', 'placeholder'=>'Enter password again']) }}
 			  </div>
 			  {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
 			{{ Form::close() }}
