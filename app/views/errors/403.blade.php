@@ -1,4 +1,4 @@
-@extends('master')
+@extends('master.movie')
 
 @section('content')
 

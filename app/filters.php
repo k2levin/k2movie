@@ -43,7 +43,7 @@ Route::filter('auth', function()
 		}
 		else
 		{
-			return Redirect::guest('login');
+			return Redirect::route('user.login')->withErrors(['credentials'=>'User not yet login']);
 		}
 	}
 });

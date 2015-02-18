@@ -15,7 +15,7 @@ return array(
 	|
 	*/
 
-	'default' => 'sync',
+	'default' => 'sqs',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -43,10 +43,10 @@ return array(
 
 		'sqs' => array(
 			'driver' => 'sqs',
-			'key'    => 'your-public-key',
-			'secret' => 'your-secret-key',
-			'queue'  => 'your-queue-url',
-			'region' => 'us-east-1',
+			'key'    => $_ENV['SQS_PUBLIC_KEY'],
+			'secret' => $_ENV['SQS_SECRET_KEY'],
+			'queue'  => $_ENV['SQS_QUEUE_URL'],
+			'region' => $_ENV['SQS_REGION'],
 		),
 
 		'iron' => array(

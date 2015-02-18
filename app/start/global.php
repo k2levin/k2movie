@@ -48,7 +48,7 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 
 App::error(function(Exception $exception, $code)
 {
-	// for debug use
+	// for local debug use
 	// Log::error($exception);
 
 	switch($code)
