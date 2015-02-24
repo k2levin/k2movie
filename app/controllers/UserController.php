@@ -27,14 +27,16 @@ class UserController extends BaseController {
 		$email_data = ['confirmation_code'=>$confirmation_code];
 
 		$User = new User;
-		$User->name = Input::get('name');
-		$User->email = Input::get('email');
+		$name = Input::get('name');
+		$User->name = $name;
+		$email = Input::get('email');
+		$User->email = $email;
 		$User->password = Hash::make(Input::get('password'));
 		$User->confirmation_code = $confirmation_code;
 		$User->save();
 
-		Mail::queue('emails.auth.activate', $email_data, function($message) {
-			$message->to(Input::get('email'), Input::get('username'))
+		Mail::queue('emails.auth.activate', $email_data, function($message) use($name, $email) {
+			$message->to($email, $name)
 					->subject('k2movie - Account Activation');
 		});
 		
