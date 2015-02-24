@@ -9,12 +9,14 @@ class ReminderController extends Controller {
 
 	public function postRemind()
 	{
-		Queue::push(function()
+		Queue::push(function($job)
 		{
 			$response = Password::remind(Input::only('email'), function($message)
 			{
 				$message->subject('Password Reminder');
 			});
+
+			$job->delete();
 		});
 
 		$response = Password::remind(Input::only('email'), function($message)
