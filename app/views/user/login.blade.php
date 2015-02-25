@@ -41,6 +41,8 @@
 			  	{{ Form::checkbox('remember_me', 'true', true) }}
 			  	{{ Form::label('remember_me', '&nbsp;&nbsp;Remember me') }}
 			  </div>
+			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
+			  <br />
 			  {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
 			{{ Form::close() }}
 

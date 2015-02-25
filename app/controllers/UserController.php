@@ -1,6 +1,24 @@
 <?php
 
+require_once app_path()."/lib/recaptchalib.php";
+
 class UserController extends BaseController {
+
+	private function recaptcha($user_input_recaptcha, $user_ip)
+	{
+		$secret_captcha = $_ENV['SECRET_CAPTCHA'];
+		$response_captcha = NULL;
+		$ReCaptcha = new ReCaptcha($secret_captcha);
+
+		if($user_input_recaptcha) {
+		    $response_captcha = $ReCaptcha->verifyResponse(
+		        $user_ip,
+		        $user_input_recaptcha
+		    );
+		}
+
+		return $response_captcha;
+	}
 
 	public function register()
 	{
@@ -21,6 +39,12 @@ class UserController extends BaseController {
 
 		if($validator->fails()) {
 			return Redirect::back()->withInput()->withErrors($validator);
+		}
+
+		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
+
+		if($response_captcha === NULL || $response_captcha->success !== TRUE) {
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 		}
 
 		$confirmation_code = str_random(30);
@@ -72,11 +96,16 @@ class UserController extends BaseController {
 		];
 
 		$input = Input::only('email', 'password');
-
 		$validator = Validator::make($input, $rules);
 
 		if($validator->fails()) {
 			return Redirect::back()->withInput()->withErrors($validator);
+		}
+
+		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
+
+		if($response_captcha === NULL || $response_captcha->success !== TRUE) {
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 		}
 
 		$credentials = [

@@ -39,6 +39,8 @@
 			  	{{ Form::label('password_confirmation', 'Confirm Password') }}
 			  	{{ Form::password('password_confirmation', ['class'=>'form-control', 'placeholder'=>'Enter password again']) }}
 			  </div>
+			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
+			  <br />
 			  {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
 			{{ Form::close() }}
 
