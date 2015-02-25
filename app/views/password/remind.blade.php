@@ -33,6 +33,8 @@
 			  	{{ Form::label('email', 'Email') }}
 			  	{{ Form::text('email', Input::old('email'), ['class'=>'form-control', 'placeholder'=>'Enter email']) }}
 			  </div>
+			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
+			  <br />
 			  {{ Form::submit('Send Reminder', ['class'=>'btn btn-primary']) }}
 			{{ Form::close() }}
 
