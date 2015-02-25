@@ -7,11 +7,6 @@ Route::get('movie/filter/{field}/{param}', ['as'=>'movie.filter', 'uses'=>'Movie
 Route::get('movie/{movie}', ['as'=>'movie.description', 'uses'=>'MovieController@description']);
 Route::get('movie/{movie}/preview', ['as'=>'movie.preview', 'before'=>'auth', 'uses'=>'MovieController@preview']);
 
-// Redirect to this route if detect mobile browser
-Route::get('mobile', function() {
-	return View::make('mobile');
-});
-
 // User
 Route::get('user/register', ['as'=>'user.register', 'uses'=>'UserController@register']);
 Route::post('user/register', ['as'=>'user.register', 'before'=>'csrf', 'uses'=>'UserController@post_register']);
@@ -31,6 +26,16 @@ Route::post('user/password/remind', ['as'=>'user.password.remind', 'before'=>'cs
 Route::get('user/password/reset/{token}', ['as'=>'user.password.reset', 'uses'=>'ReminderController@getReset']);
 Route::post('user/password/reset', ['as'=>'user.password.reset', 'before'=>'csrf', 'uses'=>'ReminderController@postReset']);
 
+// Redirect to this route if detect mobile browser
+Route::get('mobile', function() {
+	return View::make('mobile');
+});
 
+// Sitemap
+Route::get('sitemap', function() {
+	$content = file_get_contents(asset('download/sitemap.xml'));
+
+	return Response::make($content, 200, ['content-type'=>'application/xml']);
+});
 
 
