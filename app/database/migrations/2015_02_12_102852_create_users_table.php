@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration {
 			$table->boolean('confirmed')->default(0);
 			$table->string('confirmation_code')->nullable();
 			$table->rememberToken();
+			$table->string('google2fa_key')->nullable();
 			$table->timestamps();
 		});
 	}

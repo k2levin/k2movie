@@ -1,5 +1,8 @@
 <?php
 
+Route::get('mobile', ['as'=>'mobile', 'uses'=>'HomeController@mobile']);
+Route::get('sitemap', ['as'=>'sitemap', 'uses'=>'HomeController@sitemap']);
+
 // Movie
 Route::get('/', ['as'=>'home', 'uses'=>'MovieController@index']);
 Route::post('movie/search', ['as'=>'movie.search', 'before'=>'csrf', 'uses'=>'MovieController@search']);
@@ -16,7 +19,13 @@ Route::get('user/activate/{confirmation_code}', ['as'=>'user.activate', 'uses'=>
 Route::get('user/login', ['as'=>'user.login', 'uses'=>'UserController@login']);
 Route::post('user/login', ['as'=>'user.login', 'before'=>'csrf', 'uses'=>'UserController@post_login']);
 
+Route::get('user/tsa', ['as'=>'user.tsa', 'uses'=>'UserController@tsa']);
+Route::post('user/tsa', ['as'=>'user.tsa', 'before'=>'auth', 'before'=>'csrf', 'uses'=>'UserController@post_tsa']);
+
 Route::get('user/profile', ['as'=>'user.profile', 'before'=>'auth', 'uses'=>'UserController@profile']);
+
+Route::get('user/profile/tsa', ['as'=>'user.profile.tsa', 'before'=>'auth', 'uses'=>'UserController@setup_tsa']);
+Route::post('user/profile/tsa', ['as'=>'user.profile.tsa', 'before'=>'auth', 'before'=>'csrf', 'uses'=>'UserController@post_setup_tsa']);
 
 Route::get('user/logout', ['as'=>'user.logout', 'before'=>'auth', 'uses'=>'UserController@logout']);
 
@@ -26,16 +35,5 @@ Route::post('user/password/remind', ['as'=>'user.password.remind', 'before'=>'cs
 Route::get('user/password/reset/{token}', ['as'=>'user.password.reset', 'uses'=>'ReminderController@getReset']);
 Route::post('user/password/reset', ['as'=>'user.password.reset', 'before'=>'csrf', 'uses'=>'ReminderController@postReset']);
 
-// Redirect to this route if detect mobile browser
-Route::get('mobile', function() {
-	return View::make('mobile');
-});
-
-// Sitemap
-Route::get('sitemap', function() {
-	$content = file_get_contents(asset('download/sitemap.xml'));
-
-	return Response::make($content, 200, ['content-type'=>'application/xml']);
-});
 
 

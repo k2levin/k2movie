@@ -18,7 +18,7 @@
 
 			@if($errors->first())
 				<div class="alert alert-danger page-alert">
-					{{ $errors->first() }}
+					{{{ $errors->first() }}}
 				</div>
 			@endif
 

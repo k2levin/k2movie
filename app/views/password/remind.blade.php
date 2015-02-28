@@ -24,7 +24,7 @@
 
 			@if($errors->first())
 				<div class="alert alert-danger page-alert">
-					{{ $errors->first() }}
+					{{{ $errors->first() }}}
 				</div>
 			@endif
 
@@ -36,6 +36,7 @@
 			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
 			  <br />
 			  {{ Form::submit('Send Reminder', ['class'=>'btn btn-primary']) }}
+			  <a class="btn btn-primary" href="{{ route('user.login') }}" role="button">Cancel</a>
 			{{ Form::close() }}
 
 		</div>

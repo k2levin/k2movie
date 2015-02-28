@@ -27,6 +27,18 @@
 				</tr>
 			</table>
 
+			<br />
+
+			<p>
+				<a class="btn btn-info btn-sm" href="{{ route('user.profile.tsa') }}" role="button">
+					@if($exists_google2fa_key)
+						Edit
+					@else
+						Enable
+					@endif
+				</a> Two Step Authentication
+			</p>
+
 		</div>
 		<div class="col-md-3"></div>
 	</div>
