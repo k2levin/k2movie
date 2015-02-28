@@ -2,7 +2,7 @@
 
 @section('title')
 
-	<title>k2movie - Two Step Authentication</title>
+	<title>k2movie - Login Two Step Authentication</title>
 
 @stop
 
@@ -12,7 +12,7 @@
 		<div class="col-md-3"></div>
 		<div class="col-md-6">
 
-			<h2 align="center"><strong>Two Step Authentication</strong></h2>
+			<h2 align="center"><strong>Login Two Step Authentication</strong></h2>
 
 			<hr />
 
@@ -22,7 +22,7 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.tsa', 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal']) }}
+			{{ Form::open(['route'=>'user.tsa.login', 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal']) }}
 				<div class="form-group">
 					{{ Form::label('verification_code', 'Verification_Code: ', ['class'=>'col-sm-3 control-label']) }}
 					<div class="col-sm-9">

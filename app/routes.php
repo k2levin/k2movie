@@ -19,13 +19,13 @@ Route::get('user/activate/{confirmation_code}', ['as'=>'user.activate', 'uses'=>
 Route::get('user/login', ['as'=>'user.login', 'uses'=>'UserController@login']);
 Route::post('user/login', ['as'=>'user.login', 'before'=>'csrf', 'uses'=>'UserController@post_login']);
 
-Route::get('user/tsa', ['as'=>'user.tsa', 'uses'=>'UserController@tsa']);
-Route::post('user/tsa', ['as'=>'user.tsa', 'before'=>'auth', 'before'=>'csrf', 'uses'=>'UserController@post_tsa']);
+Route::get('user/tsa/login', ['as'=>'user.tsa.login', 'uses'=>'UserController@login_tsa']);
+Route::post('user/tsa/login', ['as'=>'user.tsa.login', 'before'=>'csrf', 'uses'=>'UserController@post_login_tsa']);
 
 Route::get('user/profile', ['as'=>'user.profile', 'before'=>'auth', 'uses'=>'UserController@profile']);
 
-Route::get('user/profile/tsa', ['as'=>'user.profile.tsa', 'before'=>'auth', 'uses'=>'UserController@setup_tsa']);
-Route::post('user/profile/tsa', ['as'=>'user.profile.tsa', 'before'=>'auth', 'before'=>'csrf', 'uses'=>'UserController@post_setup_tsa']);
+Route::get('user/tsa/setup', ['as'=>'user.tsa.setup', 'before'=>'auth', 'uses'=>'UserController@setup_tsa']);
+Route::post('user/tsa/setup', ['as'=>'user.tsa.setup', 'before'=>'csrf', 'uses'=>'UserController@post_setup_tsa']);
 
 Route::get('user/logout', ['as'=>'user.logout', 'before'=>'auth', 'uses'=>'UserController@logout']);
 

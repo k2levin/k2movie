@@ -30,7 +30,7 @@
 			<br />
 
 			<p>
-				<a class="btn btn-info btn-sm" href="{{ route('user.profile.tsa') }}" role="button">
+				<a class="btn btn-info btn-sm" href="{{ route('user.tsa.setup') }}" role="button">
 					@if($exists_google2fa_key)
 						Edit
 					@else

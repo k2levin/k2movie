@@ -111,13 +111,13 @@ class UserController extends BaseController {
 
 		if(Auth::attempt($credentials, $remember_me)) {
 			if(Auth::user()->google2fa_key !== NULL) {
-				Session::flash('email', Input::get('email'));
-				Session::flash('password', Input::get('password'));
-				Session::flash('remember_me', Input::get('remember_me'));
-				Session::flash('google2fa_key', Auth::user()->google2fa_key);
+				Session::put('email', Input::get('email'));
+				Session::put('password', Input::get('password'));
+				Session::put('remember_me', Input::get('remember_me'));
+				Session::put('google2fa_key', Auth::user()->google2fa_key);
 				Auth::logout();
 
-				return Redirect::route('user.tsa');
+				return Redirect::route('user.tsa.login');
 			}
 			return Redirect::route('home')->with('flash_notice', 'User login successfully');
 		} else if($confirmed === '0') {
@@ -129,7 +129,7 @@ class UserController extends BaseController {
 	}
 
 	// login with 2 step authencation
-	public function tsa()
+	public function login_tsa()
 	{
 		if(!Session::has('email') || !Session::has('password') || !Session::has('remember_me') || !Session::has('google2fa_key'))
 			return Redirect::route('user.login')->withErrors(['credentials'=>'Please login']);
@@ -140,10 +140,10 @@ class UserController extends BaseController {
 		$password = Session::get('password');
 		$remember_me = Session::get('remember_me');
 
-		return View::make('user.tsa')->with(compact('google2fa_key', 'email', 'password', 'remember_me'));
+		return View::make('user.tsa.login')->with(compact('google2fa_key', 'email', 'password', 'remember_me'));
 	}
 
-	public function post_tsa()
+	public function post_login_tsa()
 	{
 		$rules = ['verification_code'=>'required|digits:6'];
 
@@ -199,7 +199,7 @@ class UserController extends BaseController {
 
 		$qr_link = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth://totp/k2movie.k2studio.net%3Fsecret%3D'.$google2fa_key;
 
-		return View::make('user.setup_tsa')->with(compact('google2fa_key', 'qr_link'));
+		return View::make('user.tsa.setup')->with(compact('google2fa_key', 'qr_link'));
 	}
 
 	public function post_setup_tsa()

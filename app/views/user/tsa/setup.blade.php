@@ -66,7 +66,7 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.profile.tsa', 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal']) }}
+			{{ Form::open(['route'=>'user.tsa.setup', 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal']) }}
 				<div class="form-group">
 			  	{{ Form::label('verification_code', 'Verification_Code: ', ['class'=>'col-sm-3 control-label']) }}
 			  	<div class="col-sm-9">
