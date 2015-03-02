@@ -28,19 +28,14 @@ class ReminderController extends Controller {
 		if($response_captcha === NULL || $response_captcha->success !== TRUE)
 			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 
-		Queue::push(function($job)
+		Queue::push(function($job) use(&$response)
 		{
 			$response = Password::remind(Input::only('email'), function($message)
 			{
-				$message->subject('Password Reminder');
+				$message->subject('k2movie - Password Reset');
 			});
 
 			$job->delete();
-		});
-
-		$response = Password::remind(Input::only('email'), function($message)
-		{
-			$message->subject('Password Reminder');
 		});
 
 		switch ($response)

@@ -2,7 +2,7 @@
 
 @section('title')
 
-	<title>k2movie - Registration</title>
+	<title>k2movie - Remind Two Step Authentication</title>
 
 @stop
 
@@ -12,9 +12,15 @@
 		<div class="col-md-3"></div>
 		<div class="col-md-6">
 
-			<h2 align="center"><strong>Registration</strong></h2>
+			<h2 align="center"><strong>Remind Two Step Authentication</strong></h2>
 
 			<hr />
+
+			@if(Session::has('flash_notice'))
+				<div class="alert alert-info page-alert">
+		    		{{ Session::get('flash_notice') }}
+			    </div>
+			@endif
 
 			@if($errors->first())
 				<div class="alert alert-danger page-alert">
@@ -22,11 +28,7 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.register', 'method'=>'post', 'role'=>'form']) }}
-			  <div class="form-group">
-			  	{{ Form::label('name', 'Name') }}
-			  	{{ Form::text('name', Input::old('name'), ['class'=>'form-control', 'placeholder'=>'Enter name']) }}
-			  </div>
+			{{ Form::open(['route'=>'user.tsa.remind', 'method'=>'post', 'role'=>'form']) }}
 			  <div class="form-group">
 			  	{{ Form::label('email', 'Email') }}
 			  	{{ Form::text('email', Input::old('email'), ['class'=>'form-control', 'placeholder'=>'Enter email']) }}
@@ -35,14 +37,10 @@
 			  	{{ Form::label('password', 'Password') }}
 			  	{{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Enter password']) }}
 			  </div>
-			  <div class="form-group">
-			  	{{ Form::label('password_confirmation', 'Confirm Password') }}
-			  	{{ Form::password('password_confirmation', ['class'=>'form-control', 'placeholder'=>'Enter password again']) }}
-			  </div>
 			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
 			  <br />
 			  {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
-			  <a class="btn btn-primary" href="{{ route('home') }}" role="button">Cancel</a>
+			  <a class="btn btn-primary" href="{{ route('user.tsa.login') }}" role="button">Cancel</a>
 			{{ Form::close() }}
 
 			<br />
@@ -50,5 +48,5 @@
 		</div>
 		<div class="col-md-3"></div>
 	</div>
-	
+
 @stop

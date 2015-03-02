@@ -52,7 +52,7 @@
 			<div class="collapse" id="hide_key">
 				<p>Type the secret configuration key below into <strong>TSA</strong> app</p>
 				<div class="well">
-					<p>{{{ $google2fa_key }}}</p>
+					<p>{{{ $tsa_key }}}</p>
 				</div>
 			</div>
 
@@ -66,14 +66,14 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.profile.tsa', 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal']) }}
+			{{ Form::open(['route'=>'user.tsa.setup', 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal']) }}
 				<div class="form-group">
 			  	{{ Form::label('verification_code', 'Verification_Code: ', ['class'=>'col-sm-3 control-label']) }}
 			  	<div class="col-sm-9">
-			  		{{ Form::text('verification_code', Input::old('verification_code'), ['class'=>'form-control', 'placeholder'=>'Enter Verification Code']) }}
+			  		{{ Form::text('verification_code', Input::old('verification_code'), ['class'=>'form-control', 'placeholder'=>'Enter tsa verification code']) }}
 			  	</div>
 			  </div>
-			  {{ Form::hidden('google2fa_key', $google2fa_key) }}
+			  {{ Form::hidden('tsa_key', $tsa_key) }}
 			  <div class="form-group">
 			  	<div class="col-sm-offset-3 col-sm-9">
 			  		{{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}

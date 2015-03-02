@@ -28,12 +28,12 @@
 			  	{{ Form::text('email', Input::old('email'), ['class'=>'form-control', 'placeholder'=>'Enter email']) }}
 			  </div>
 			  <div class="form-group">
-			  	{{ Form::label('password', 'Password') }}
-			  	{{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Enter password']) }}
+			  	{{ Form::label('password', 'New Password') }}
+			  	{{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Enter new password']) }}
 			  </div>
 			  <div class="form-group">
-			  	{{ Form::label('password_confirmation', 'Password Confirm') }}
-			  	{{ Form::password('password_confirmation', ['class'=>'form-control', 'placeholder'=>'Confirm password']) }}
+			  	{{ Form::label('password_confirmation', 'New Password Confirm') }}
+			  	{{ Form::password('password_confirmation', ['class'=>'form-control', 'placeholder'=>'Confirm new password']) }}
 			  </div>
 			  {{ Form::hidden('token', $token) }}
 			  {{ Form::submit('Reset Password', ['class'=>'btn btn-primary']) }}

@@ -68,4 +68,29 @@ return array(
 
 	),
 
+	/*
+	|--------------------------------------------------------------------------
+	| Two Step Authentication Reminder Settings
+	|--------------------------------------------------------------------------
+	|
+	| Here you may set the settings for TSA reminders, including a view
+	| that should be used as your TSA reminder e-mail. You will also
+	| be able to set the name of the table that holds the reset tokens.
+	|
+	| The "expire" time is the number of minutes that the reminder should be
+	| considered valid. This security feature keeps tokens short-lived so
+	| they have less time to be guessed. You may change this as needed.
+	|
+	*/
+
+	'tsa' => array(
+
+		'email' => 'emails.auth.tsa',
+
+		'table' => 'tsa_reminders',
+
+		'expire' => 60,
+
+	),
+
 );

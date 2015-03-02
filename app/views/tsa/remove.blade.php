@@ -2,7 +2,7 @@
 
 @section('title')
 
-	<title>k2movie - Registration</title>
+	<title>k2movie - Remove Two Step Authentication</title>
 
 @stop
 
@@ -12,7 +12,7 @@
 		<div class="col-md-3"></div>
 		<div class="col-md-6">
 
-			<h2 align="center"><strong>Registration</strong></h2>
+			<h2 align="center"><strong>Remove Two Step Authentication</strong></h2>
 
 			<hr />
 
@@ -22,11 +22,7 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.register', 'method'=>'post', 'role'=>'form']) }}
-			  <div class="form-group">
-			  	{{ Form::label('name', 'Name') }}
-			  	{{ Form::text('name', Input::old('name'), ['class'=>'form-control', 'placeholder'=>'Enter name']) }}
-			  </div>
+			{{ Form::open(['route'=>'user.tsa.remove', 'method'=>'post', 'role'=>'form']) }}
 			  <div class="form-group">
 			  	{{ Form::label('email', 'Email') }}
 			  	{{ Form::text('email', Input::old('email'), ['class'=>'form-control', 'placeholder'=>'Enter email']) }}
@@ -35,20 +31,12 @@
 			  	{{ Form::label('password', 'Password') }}
 			  	{{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Enter password']) }}
 			  </div>
-			  <div class="form-group">
-			  	{{ Form::label('password_confirmation', 'Confirm Password') }}
-			  	{{ Form::password('password_confirmation', ['class'=>'form-control', 'placeholder'=>'Enter password again']) }}
-			  </div>
-			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
-			  <br />
+			  {{ Form::hidden('tsa_token', $tsa_token) }}
 			  {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
-			  <a class="btn btn-primary" href="{{ route('home') }}" role="button">Cancel</a>
 			{{ Form::close() }}
-
-			<br />
 
 		</div>
 		<div class="col-md-3"></div>
 	</div>
-	
+
 @stop
