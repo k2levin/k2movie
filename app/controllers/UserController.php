@@ -1,7 +1,6 @@
 <?php
 
 require_once app_path()."/lib/ReCaptcha.php";
-require_once app_path()."/lib/Google2FA.php";
 
 class UserController extends BaseController {
 
@@ -31,14 +30,12 @@ class UserController extends BaseController {
 		];
 
 		$input = Input::only('name', 'email', 'password', 'password_confirmation');
-
 		$validator = Validator::make($input, $rules);
 
 		if($validator->fails())
 			return Redirect::back()->withInput()->withErrors($validator);
 
 		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-
 		if($response_captcha === NULL || $response_captcha->success !== TRUE)
 			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 
@@ -55,12 +52,10 @@ class UserController extends BaseController {
 		$User->save();
 
 		Mail::queue('emails.auth.activate', $email_data, function($message) use($name, $email) {
-			$message->to($email, $name)
-					->subject('k2movie - Account Activation');
+			$message->to($email, $name)->subject('k2movie - Account Activation');
 		});
 		
-		return Redirect::route('home')
-			->with('flash_notice', 'Please click the activation link inside the email sent to you');
+		return Redirect::route('home')->with('flash_notice', 'Please click the activation link inside the email sent to you');
 	}
 
 	public function activate($confirmation_code)
@@ -96,7 +91,6 @@ class UserController extends BaseController {
 			return Redirect::back()->withInput()->withErrors($validator);
 
 		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-
 		if($response_captcha === NULL || $response_captcha->success !== TRUE)
 			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 
@@ -106,74 +100,24 @@ class UserController extends BaseController {
 			'confirmed'=>1
 		];
 
-		$remember_me = Input::get('remember_me');
-		$confirmed = User::where('email', '=', Input::get('email'))->first()->confirmed;
+		$User = User::where('email', '=', Input::get('email'))->first();
+		$confirmed = $User->confirmed;
 
-		if(Auth::attempt($credentials, $remember_me)) {
-			if(Auth::user()->google2fa_key !== NULL) {
-				Session::put('email', Input::get('email'));
-				Session::put('password', Input::get('password'));
-				Session::put('remember_me', Input::get('remember_me'));
-				Session::put('google2fa_key', Auth::user()->google2fa_key);
+		if(Auth::attempt($credentials, Input::get('remember_me'))) {
+			if(Auth::user()->tsa_key !== NULL) {
+				$email = Input::get('email');
+				$remember_me = Input::get('remember_me');
+				$tsa_key = $User->tsa_key;
 				Auth::logout();
 
-				return Redirect::route('user.tsa.login');
+				return Redirect::route('user.tsa.login')->with(compact('email', 'remember_me', 'tsa_key'));
 			}
 			return Redirect::route('home')->with('flash_notice', 'User login successfully');
 		} else if($confirmed === '0') {
-			return Redirect::back()->withInput()
-				->withErrors(['credentials'=>'User not yet confirmed, please click the activation link inside email']);
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'User not yet confirmed, please click the activation link inside email']);
 		} else {
 			return Redirect::back()->withInput()->withErrors(['credentials'=>'Login failed']);
 		}
-	}
-
-	// login with 2 step authencation
-	public function login_tsa()
-	{
-		if(!Session::has('email') || !Session::has('password') || !Session::has('remember_me') || !Session::has('google2fa_key'))
-			return Redirect::route('user.login')->withErrors(['credentials'=>'Please login']);
-
-		$google2fa_key = Session::get('google2fa_key');
-		$qr_link = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth://totp/k2movie.k2studio.net%3Fsecret%3D'.$google2fa_key;
-		$email = Session::get('email');
-		$password = Session::get('password');
-		$remember_me = Session::get('remember_me');
-
-		return View::make('user.tsa.login')->with(compact('google2fa_key', 'email', 'password', 'remember_me'));
-	}
-
-	public function post_login_tsa()
-	{
-		$rules = ['verification_code'=>'required|digits:6'];
-
-		$input = Input::only('verification_code');
-		$validator = Validator::make($input, $rules);
-
-		$google2fa_key = Crypt::decrypt(Input::get('google2fa_key'));
-		$verification_code = Input::get('verification_code');
-
-		if($validator->fails())
-			return Redirect::back()->withInput()->withErrors($validator);
-
-		$result = Google2FA::verify_key($google2fa_key, $verification_code);
-
-		if(!$result)
-			return Redirect::back()->withInput()->withErrors(['credentials'=>'Invalid Verification Code']);
-
-		$email = Input::get('email');
-		$password = Input::get('password');
-		$credentials = [
-			'email'=>$email,
-			'password'=>$password,
-			'confirmed'=>1
-		];
-		$remember_me = Input::get('remember_me');
-
-		if(Auth::attempt($credentials, $remember_me))
-			return Redirect::route('home')->with('flash_notice', 'User login successfully');
-		else
-			return Redirect::route('user.login')->withErrors(['credentials'=>'Login failed']);
 	}
 
 	public function profile()
@@ -181,55 +125,40 @@ class UserController extends BaseController {
 		$name = Auth::user()->name;
 		$email = Auth::user()->email;
 
-		if(Auth::user()->google2fa_key)
-			$exists_google2fa_key = TRUE;
+		if(Auth::user()->tsa_key)
+			$exists_tsa_key = TRUE;
 		else
-			$exists_google2fa_key = FALSE;
+			$exists_tsa_key = FALSE;
 
-		return View::make('user.profile')->with(compact('name', 'email', 'exists_google2fa_key'));
+		return View::make('user.profile')->with(compact('name', 'email', 'exists_tsa_key'));
 	}
 
-	// setup 2 step authencation
-	public function setup_tsa()
+	public function edit_profile()
 	{
-		if(Session::has('google2fa_key'))
-			$google2fa_key = Session::get('google2fa_key');
-		else
-			$google2fa_key = Google2FA::generate_secret_key(16);
+		$User = Auth::user();
+		$name = $User->name;
+		$tsa_key_exists = isset($User->tsa_key);
 
-		$qr_link = 'https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth://totp/k2movie.k2studio.net%3Fsecret%3D'.$google2fa_key;
-
-		return View::make('user.tsa.setup')->with(compact('google2fa_key', 'qr_link'));
+		return View::make('user.edit')->with(compact('name', 'tsa_key_exists'));
 	}
 
-	public function post_setup_tsa()
+	public function put_profile()
 	{
-		$rules = ['verification_code'=>'required|digits:6'];
-
-		$input = Input::only('verification_code');
+		$rules = ['name'=>'required'];
+		$input = Input::only('name');
 		$validator = Validator::make($input, $rules);
-
-		$google2fa_key = Input::get('google2fa_key');
-		$verification_code = Input::get('verification_code');
-
-		if($validator->fails()) {
-			Session::flash('google2fa_key', $google2fa_key);
-
+		if($validator->fails())
 			return Redirect::back()->withInput()->withErrors($validator);
-		}
 
-		$result = Google2FA::verify_key($google2fa_key, $verification_code);
+		$User = Auth::user();
+		$User->name = Input::get('name');
 
-		if(!$result) {
-			Session::flash('google2fa_key', $google2fa_key);
+		if(Input::get('remove_tsa'))
+			$User->tsa_key = NULL;
 
-			return Redirect::back()->withInput()->withErrors(['credentials'=>'Invalid Verification Code']);
-		}
+		$User->save();
 
-		Auth::user()->google2fa_key = Crypt::encrypt($google2fa_key);
-		Auth::user()->save();
-
-		return Redirect::route('home')->with('flash_notice', 'Two Step Authentication setup successfully');
+		return Redirect::route('home')->with('flash_notice', "User's profile updated successfully");
 	}
 
 	public function logout()

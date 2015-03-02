@@ -8,7 +8,7 @@
 		
 		<p>Greetings,</p>
 		<br />
-		<p>This email is sent to you because of requsting for your password reset.</p>
+		<p>This email is sent to you because of requesting for your password reset.</p>
 		<p>To reset your password, please click <a href="{{ URL::to('user/password/reset', array($token)) }}">HERE</a>.</p>
 		<br/>
 		<p>This link will expire in {{ Config::get('auth.reminder.expire', 60) }} minutes.</p>

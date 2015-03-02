@@ -29,15 +29,13 @@
 
 			<br />
 
-			<p>
-				<a class="btn btn-info btn-sm" href="{{ route('user.tsa.setup') }}" role="button">
-					@if($exists_google2fa_key)
-						Edit
-					@else
-						Enable
-					@endif
-				</a> Two Step Authentication
-			</p>
+			@if(!$exists_tsa_key)
+			<p><a class="btn btn-info btn-sm" href="{{ route('user.tsa.setup') }}" role="button">Enable</a> Two Step Authentication</p>
+			<br />
+			@endif
+
+			<a class="btn btn-primary" href="{{ route('user.profile.edit') }}" role="button">Edit</a>
+			<a class="btn btn-primary" href="{{ route('home') }}" role="button">Cancel</a>
 
 		</div>
 		<div class="col-md-3"></div>
