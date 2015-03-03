@@ -31,6 +31,8 @@
 			  	{{ Form::label('password', 'Password') }}
 			  	{{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Enter password']) }}
 			  </div>
+			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
+			  <br />
 			  {{ Form::hidden('tsa_token', $tsa_token) }}
 			  {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
 			{{ Form::close() }}

@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration {
 			$table->string('confirmation_code')->nullable();
 			$table->rememberToken();
 			$table->string('tsa_key')->nullable();
+			$table->timestamp('login_trial_at')->nullable();
 			$table->timestamps();
 		});
 	}
