@@ -24,20 +24,14 @@
 
 			{{ Form::open(['route'=>'user.tsa.login', 'method'=>'post', 'role'=>'form', 'class'=>'form-horizontal']) }}
 				<div class="form-group">
-					{{ Form::label('password', 'Password: ', ['class'=>'col-sm-3 control-label']) }}
-					<div class="col-sm-9">
-						{{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Enter password again']) }}
-					</div>
-				</div>
-				<div class="form-group">
 					{{ Form::label('verification_code', 'Verification_Code: ', ['class'=>'col-sm-3 control-label']) }}
 					<div class="col-sm-9">
 						{{ Form::text('verification_code', Input::old('verification_code'), ['class'=>'form-control', 'placeholder'=>'Enter tsa verification code']) }}
 					</div>
 				</div>
-				{{ Form::hidden('email', $email) }}
-				{{ Form::hidden('remember_me', $remember_me) }}
-				{{ Form::hidden('tsa_key', $tsa_key) }}
+				{{ Form::hidden('email', Session::get('email')) }}
+				{{ Form::hidden('password', Session::get('password')) }}
+				{{ Form::hidden('remember_me', Session::get('remember_me')) }}
 				<div class="form-group">
 					<div class="col-sm-offset-3 col-sm-9">
 						{{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}

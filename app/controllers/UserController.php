@@ -2,8 +2,16 @@
 
 require_once app_path()."/lib/ReCaptcha.php";
 
+Use Carbon\Carbon;
+
 class UserController extends BaseController {
 
+	/**
+	 * Recaptcha verification
+	 * @param  string $user_input_recaptcha
+	 * @param  string $user_ip
+	 * @return object
+	 */
 	private function recaptcha($user_input_recaptcha, $user_ip)
 	{
 		$secret_captcha = $_ENV['SECRET_CAPTCHA'];
@@ -34,10 +42,6 @@ class UserController extends BaseController {
 
 		if($validator->fails())
 			return Redirect::back()->withInput()->withErrors($validator);
-
-		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-		if($response_captcha === NULL || $response_captcha->success !== TRUE)
-			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 
 		$confirmation_code = str_random(30);
 		$email_data = ['confirmation_code'=>$confirmation_code];
@@ -79,6 +83,29 @@ class UserController extends BaseController {
 
 	public function post_login()
 	{
+		$rules = ['email'=>'required|email|exists:users'];
+
+		$input = Input::only('email');
+		$validator = Validator::make($input, $rules);
+
+		if($validator->fails())
+			return Redirect::back()->withInput()->withErrors($validator);
+
+		$email = Input::get('email');
+		
+		return Redirect::route('user.login2')->with(compact('email'));
+	}
+
+	public function login2()
+	{
+		$email = Session::get('email');
+		$login_trial_at = User::where('email', '=', $email)->first()->login_trial_at;
+
+		return View::make('user.login2')->with(compact('email', 'login_trial_at'));
+	}
+
+	public function post_login2()
+	{
 		$rules = [
 			'email'=>'required|email|exists:users',
 			'password'=>'required'
@@ -86,13 +113,16 @@ class UserController extends BaseController {
 
 		$input = Input::only('email', 'password');
 		$validator = Validator::make($input, $rules);
+		$email = Input::get('email');
 
 		if($validator->fails())
-			return Redirect::back()->withInput()->withErrors($validator);
+			return Redirect::back()->withInput()->with(compact('email'))->withErrors($validator);
 
-		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-		if($response_captcha === NULL || $response_captcha->success !== TRUE)
-			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
+		if(Input::has('g-recaptcha-response')) {
+			$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
+			if($response_captcha === NULL || $response_captcha->success !== TRUE)
+				return Redirect::back()->withInput()->with(compact('email'))->withErrors(['credentials'=>'ReCaptcha failed']);
+		}
 
 		$credentials = [
 			'email'=>Input::get('email'),
@@ -104,19 +134,25 @@ class UserController extends BaseController {
 		$confirmed = $User->confirmed;
 
 		if(Auth::attempt($credentials, Input::get('remember_me'))) {
+			$User->login_trial_at = NULL;
+			$User->save();
+
 			if(Auth::user()->tsa_key !== NULL) {
 				$email = Input::get('email');
+				$password = Input::get('password');
 				$remember_me = Input::get('remember_me');
-				$tsa_key = $User->tsa_key;
 				Auth::logout();
 
-				return Redirect::route('user.tsa.login')->with(compact('email', 'remember_me', 'tsa_key'));
+				return Redirect::route('user.tsa.login')->with(compact('email', 'password', 'remember_me'));
 			}
 			return Redirect::route('home')->with('flash_notice', 'User login successfully');
 		} else if($confirmed === '0') {
-			return Redirect::back()->withInput()->withErrors(['credentials'=>'User not yet confirmed, please click the activation link inside email']);
+			return Redirect::back()->withInput()->with(compact('email'))->withErrors(['credentials'=>'User not yet confirmed, please click the activation link inside email']);
 		} else {
-			return Redirect::back()->withInput()->withErrors(['credentials'=>'Login failed']);
+			$User->login_trial_at = Carbon::now();
+			$User->save();
+
+			return Redirect::back()->withInput()->with(compact('email'))->withErrors(['credentials'=>'Login failed']);
 		}
 	}
 

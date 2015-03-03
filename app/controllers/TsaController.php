@@ -1,12 +1,31 @@
 <?php
 
-use Illuminate\Auth\Reminders\DatabaseReminderRepository;
-
 require_once app_path()."/lib/ReCaptcha.php";
 require_once app_path()."/lib/Google2FA.php";
 
+use Carbon\Carbon;
+
 class TsaController extends BaseController {
 
+	protected $Connection;
+	protected $table;
+	protected $hashKey;
+	protected $expire;
+
+	public function __construct()
+	{
+		$this->Connection = DB::connection();
+		$this->table = Config::get('auth.tsa.table');
+		$this->hashKey = Config::get('app.key');
+		$this->expire = Config::get('auth.tsa.expire', 60);
+	}
+
+	/**
+	 * Recaptcha verification.
+	 * @param  string $user_input_recaptcha
+	 * @param  string $user_ip
+	 * @return object
+	 */
 	private function recaptcha($user_input_recaptcha, $user_ip)
 	{
 		$secret_captcha = $_ENV['SECRET_CAPTCHA'];
@@ -19,28 +38,32 @@ class TsaController extends BaseController {
 		return $response_captcha;
 	}
 
-	private function generate_token($User)
+	/**
+	 * Generate new token.
+	 * @param  string $email
+	 * @return string
+	 */
+	private function generate_token($email)
 	{
-		$Connection = DB::connection();
-		$table = Config::get('auth.tsa.table');
-		$key = Config::get('app.key');
-		$expire = Config::get('auth.tsa.expire', 60);
+		$value = str_shuffle(sha1($email.spl_object_hash($this).microtime(true)));
 
-		$DatabaseReminderRepository = new DatabaseReminderRepository($Connection, $table, $key, $expire);
+		return hash_hmac('sha1', $value, $this->hashKey);
+	}
 
-		return $DatabaseReminderRepository->createNewToken($User);
+	/**
+	 * Delete expired all token in the database
+	 * @return [type] [description]
+	 */
+	private function delete_expired_token()
+	{
+		$expired = Carbon::now()->subSeconds($this->expire * 60);
+
+		TsaReminder::where('created_at', '<', $expired)->delete();
 	}
 
 	public function login_tsa()
 	{
-		if(!Session::has('email') || !Session::has('remember_me') || !Session::has('tsa_key'))
-			return Redirect::route('user.login')->withErrors(['credentials'=>'Please login']);
-
-		$email = Session::get('email');
-		$remember_me = Session::get('remember_me');
-		$tsa_key = Session::get('tsa_key');
-
-		return View::make('tsa.login')->with(compact('email', 'remember_me', 'tsa_key'));
+		return View::make('tsa.login');
 	}
 
 	public function post_login_tsa()
@@ -52,17 +75,17 @@ class TsaController extends BaseController {
 		$email = Input::get('email');
 		$password = Input::get('password');
 		$remember_me = Input::get('remember_me');
-		$tsa_key = Input::get('tsa_key');
 		$verification_code = Input::get('verification_code');
 
 		if($validator->fails())
-			return Redirect::back()->withInput()->with(compact('email', 'remember_me', 'tsa_key'))->withErrors($validator);
+			return Redirect::back()->withInput()->withErrors($validator);
 
+		$tsa_key = User::where('email', '=', $email)->first()->tsa_key;
 		$tsa_key_decrypted = Crypt::decrypt($tsa_key);
 		$result = Google2FA::verify_key($tsa_key_decrypted, $verification_code);
 
 		if(!$result)
-			return Redirect::back()->withInput()->with(compact('email', 'remember_me', 'tsa_key'))->withErrors(['credentials'=>'Invalid Verification Code']);
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'Invalid Verification Code']);
 
 		$credentials = [
 			'email'=>$email,
@@ -82,45 +105,35 @@ class TsaController extends BaseController {
 
 	public function post_remind_tsa()
 	{
-		$rules = [
-			'email'=>'required|email|exists:users',
-			'password'=>'required'
-		];
+		$rules = ['email'=>'required|email|exists:users'];
 
-		$input = Input::only('email', 'password');
+		$input = Input::only('email');
 		$validator = Validator::make($input, $rules);
 
 		if($validator->fails())
 			return Redirect::back()->withInput()->withErrors($validator);
 
-		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-		if($response_captcha === NULL || $response_captcha->success !== TRUE)
-			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
-
 		$email = Input::get('email');
+		$User = User::where('email', '=', $email)->first();
 
-		if(Auth::validate($input)) {
-			$User = User::where('email', '=', $email)->first();
-			$name = $User->name;
+		if(is_null($User->tsa_key))
+			return Redirect::route('user.login')->withErrors(['credentials'=>'User do not have Two Step Authentication']);
 
-			if(is_null($User->tsa_key))
-				return Redirect::route('user.login')->withErrors(['credentials'=>'User do not have Two Step Authentication']);
+		// generate tsa token
+		$this->delete_expired_token();
+		TsaReminder::where('email', '=', $email)->delete();
+		$tsa_token = $this->generate_token($email);
+		TsaReminder::create(['email'=>$email, 'tsa_token'=>$tsa_token]);
 
-			// generate tsa token
-			$tsa_token = $this->generate_token($User);
-			$TsaReminder = TsaReminder::create(['email'=>$email, 'tsa_token'=>$tsa_token]);
+		$tsa_email_view = Config::get('auth.tsa.email');
+		$email_data = ['tsa_token'=>$tsa_token];
+		$name = $User->name;
 
-			$tsa_email_view = Config::get('auth.tsa.email');
-			$email_data = ['tsa_token'=>$tsa_token];
+		Mail::queue($tsa_email_view, $email_data, function($message) use($email, $name) {
+		    $message->to($email, $name)->subject('k2movie - Remove Two Step Authentication');
+		});
 
-			Mail::queue($tsa_email_view, $email_data, function($message) use($email, $name) {
-			    $message->to($email, $name)->subject('k2movie - Remove Two Step Authentication');
-			});
-
-			return Redirect::route('home')->with('flash_notice', 'Please click the removal link inside the email sent to you');
-		} else {
-			return Redirect::back()->withInput()->withErrors(['credentials'=>'Invalid credentials']);
-		}
+		return Redirect::route('home')->with('flash_notice', 'Please click the removal link inside the email sent to you');
 	}
 
 	public function remove_tsa($tsa_token = NULL)
@@ -144,9 +157,17 @@ class TsaController extends BaseController {
 		if($validator->fails())
 			return Redirect::back()->withInput()->withErrors($validator);
 
-		if(Auth::validate($input)) {
-			$TsaReminder = TsaReminder::where('tsa_token', '=', Input::get('tsa_token'))->where('email', '=', Input::get('email'))->delete();
+		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
+		if($response_captcha === NULL || $response_captcha->success !== TRUE)
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 
+		if(Auth::validate($input)) {
+			$this->delete_expired_token();
+
+			$TsaReminder = TsaReminder::where('tsa_token', '=', Input::get('tsa_token'))
+				->where('email', '=', Input::get('email'))
+				->delete();
+				
 			if(!$TsaReminder)
 				return Redirect::back()->withInput()->withErrors(['credentials'=>'Invalid tsa_token']);
 

@@ -19,6 +19,9 @@ Route::get('user/activate/{confirmation_code}', ['as'=>'user.activate', 'uses'=>
 Route::get('user/login', ['as'=>'user.login', 'uses'=>'UserController@login']);
 Route::post('user/login', ['as'=>'user.login', 'before'=>'csrf', 'uses'=>'UserController@post_login']);
 
+Route::get('user/login2', ['as'=>'user.login2', 'uses'=>'UserController@login2']);
+Route::post('user/login2', ['as'=>'user.login2', 'before'=>'csrf', 'uses'=>'UserController@post_login2']);
+
 Route::get('user/profile', ['as'=>'user.profile', 'before'=>'auth', 'uses'=>'UserController@profile']);
 
 Route::get('user/profile/edit', ['as'=>'user.profile.edit', 'before'=>'auth', 'uses'=>'UserController@edit_profile']);

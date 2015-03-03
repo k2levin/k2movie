@@ -35,6 +35,8 @@
 			  	{{ Form::label('password_confirmation', 'New Password Confirm') }}
 			  	{{ Form::password('password_confirmation', ['class'=>'form-control', 'placeholder'=>'Confirm new password']) }}
 			  </div>
+			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
+			  <br />
 			  {{ Form::hidden('token', $token) }}
 			  {{ Form::submit('Reset Password', ['class'=>'btn btn-primary']) }}
 			{{ Form::close() }}

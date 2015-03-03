@@ -33,23 +33,9 @@
 			  	{{ Form::label('email', 'Email') }}
 			  	{{ Form::text('email', Input::old('email'), ['class'=>'form-control', 'placeholder'=>'Enter email']) }}
 			  </div>
-			  <div class="form-group">
-			  	{{ Form::label('password', 'Password') }}
-			  	{{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Enter password']) }}
-			  </div>
-			  <div class="form-group">
-			  	{{ Form::checkbox('remember_me', 'true', true) }}
-			  	{{ Form::label('remember_me', '&nbsp;&nbsp;Remember me') }}
-			  </div>
-			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
-			  <br />
 			  {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
 			  <a class="btn btn-primary" href="{{ route('home') }}" role="button">Cancel</a>
 			{{ Form::close() }}
-
-			<br />
-
-			<p><a href="{{ route('user.password.remind') }}">Forgot Password?</a></p>
 
 		</div>
 		<div class="col-md-3"></div>

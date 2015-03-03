@@ -23,11 +23,6 @@ class ReminderController extends Controller {
 
 	public function postRemind()
 	{
-		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-
-		if($response_captcha === NULL || $response_captcha->success !== TRUE)
-			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
-
 		Queue::push(function($job) use(&$response)
 		{
 			$response = Password::remind(Input::only('email'), function($message)
@@ -57,6 +52,10 @@ class ReminderController extends Controller {
 
 	public function postReset()
 	{
+		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
+		if($response_captcha === NULL || $response_captcha->success !== TRUE)
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
+		
 		$credentials = Input::only(
 			'email', 'password', 'password_confirmation', 'token'
 		);
