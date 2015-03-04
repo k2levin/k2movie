@@ -22,7 +22,7 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.tsa.remove', 'method'=>'post', 'role'=>'form']) }}
+			{{ Form::open(['route'=>'user.tsa.remove', 'method'=>'put', 'role'=>'form']) }}
 			  <div class="form-group">
 			  	{{ Form::label('email', 'Email') }}
 			  	{{ Form::text('email', Input::old('email'), ['class'=>'form-control', 'placeholder'=>'Enter email']) }}

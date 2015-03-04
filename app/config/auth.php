@@ -93,4 +93,27 @@ return array(
 
 	),
 
+	/*
+	|--------------------------------------------------------------------------
+	| User Account Confirmation Settings
+	|--------------------------------------------------------------------------
+	|
+	| Here you may set the settings for user account confirmation senders, including a view
+	| that should be used as your user account confirmation e-mail. You will also
+	| be able to set the name of the table that holds the confirmation code.
+	|
+	| The "expire" time is the number of minutes that the confirmation code should be
+	| considered valid. This security feature keeps confirmation codes short-lived so
+	| they have less time to be guessed. You may change this as needed.
+	|
+	*/
+
+	'confirmation' => array(
+
+		'email' => 'emails.auth.activate',
+
+		'table' => 'users',
+
+	),
+
 );

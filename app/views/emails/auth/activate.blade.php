@@ -11,8 +11,6 @@
 		<p>This email is sent to you because of requesting for your account activation.</p>
 		<p>To activate your account, please click <a href="{{ URL::to('user/activate', array($confirmation_code)) }}">HERE</a>.</p>
 		<br/>
-		<p>This link will expire in {{ Config::get('auth.reminder.expire', 60) }} minutes.</p>
-		<br />
 		<p>Sincerely,</p>
 		<p><strong>k2movie</strong></p>
 	</body>

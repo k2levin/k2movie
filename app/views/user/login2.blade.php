@@ -28,7 +28,7 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.login2', 'method'=>'post', 'role'=>'form']) }}
+			{{ Form::open(['route'=>'user.login2', 'method'=>'put', 'role'=>'form']) }}
 				<fieldset disabled>
 					<div class="form-group">
 					{{ Form::label('email', 'Email') }}
@@ -45,6 +45,7 @@
 					{{ Form::label('remember_me', '&nbsp;&nbsp;Remember me') }}
 				</div>
 				@if(isset($login_trial_at))
+					{{ Form::hidden('recaptcha', 'recaptcha') }}
 					<div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
 					<br />
 				@endif

@@ -1,21 +1,16 @@
 <?php
 
-require_once app_path()."/lib/ReCaptcha.php";
-require_once app_path()."/lib/Google2FA.php";
-
 use Carbon\Carbon;
+use Lib\Google2FA\Google2FA;
+use Lib\ReCaptcha\ReCaptcha;
 
 class TsaController extends BaseController {
 
-	protected $Connection;
-	protected $table;
 	protected $hashKey;
 	protected $expire;
 
 	public function __construct()
 	{
-		$this->Connection = DB::connection();
-		$this->table = Config::get('auth.tsa.table');
 		$this->hashKey = Config::get('app.key');
 		$this->expire = Config::get('auth.tsa.expire', 60);
 	}
@@ -30,10 +25,9 @@ class TsaController extends BaseController {
 	{
 		$secret_captcha = $_ENV['SECRET_CAPTCHA'];
 		$response_captcha = NULL;
-		$ReCaptcha = new ReCaptcha($secret_captcha);
 
 		if($user_input_recaptcha)
-		    $response_captcha = $ReCaptcha->verifyResponse($user_ip, $user_input_recaptcha);
+		    $response_captcha = ReCaptcha::verifyResponse($user_ip, $user_input_recaptcha, $secret_captcha);
 
 		return $response_captcha;
 	}
@@ -66,7 +60,7 @@ class TsaController extends BaseController {
 		return View::make('tsa.login');
 	}
 
-	public function post_login_tsa()
+	public function put_login_tsa()
 	{
 		$rules = ['verification_code'=>'required|digits:6'];
 		$input = Input::only('verification_code');
@@ -103,7 +97,7 @@ class TsaController extends BaseController {
 		return View::make('tsa.remind');
 	}
 
-	public function post_remind_tsa()
+	public function put_remind_tsa()
 	{
 		$rules = ['email'=>'required|email|exists:users'];
 
@@ -144,7 +138,7 @@ class TsaController extends BaseController {
 		return View::make('tsa.remove')->with('tsa_token', $tsa_token);
 	}
 
-	public function post_remove_tsa()
+	public function put_remove_tsa()
 	{
 		$rules = [
 			'email'=>'required|email|exists:users',
@@ -158,7 +152,7 @@ class TsaController extends BaseController {
 			return Redirect::back()->withInput()->withErrors($validator);
 
 		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-		if($response_captcha === NULL || $response_captcha->success !== TRUE)
+		if($response_captcha === NULL || $response_captcha['success'] !== TRUE)
 			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 
 		if(Auth::validate($input)) {

@@ -1,6 +1,6 @@
 <?php
 
-require_once app_path()."/lib/ReCaptcha.php";
+use Lib\ReCaptcha\ReCaptcha;
 
 class ReminderController extends Controller {
 
@@ -8,10 +8,9 @@ class ReminderController extends Controller {
 	{
 		$secret_captcha = $_ENV['SECRET_CAPTCHA'];
 		$response_captcha = NULL;
-		$ReCaptcha = new ReCaptcha($secret_captcha);
 
 		if($user_input_recaptcha)
-		    $response_captcha = $ReCaptcha->verifyResponse($user_ip, $user_input_recaptcha);
+		    $response_captcha = ReCaptcha::verifyResponse($user_ip, $user_input_recaptcha, $secret_captcha);
 
 		return $response_captcha;
 	}
@@ -50,10 +49,10 @@ class ReminderController extends Controller {
 		return View::make('password.reset')->with('token', $token);
 	}
 
-	public function postReset()
+	public function putReset()
 	{
 		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-		if($response_captcha === NULL || $response_captcha->success !== TRUE)
+		if($response_captcha === NULL || $response_captcha['success'] !== TRUE)
 			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 		
 		$credentials = Input::only(

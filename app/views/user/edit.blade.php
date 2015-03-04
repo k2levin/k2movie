@@ -28,7 +28,7 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.profile.edit', 'method'=>'post', 'role'=>'form']) }}
+			{{ Form::open(['route'=>'user.profile.edit', 'method'=>'put', 'role'=>'form']) }}
 			  <div class="form-group">
 			  	{{ Form::label('name', 'Name') }}
 			  	{{ Form::text('name', $name, ['class'=>'form-control', 'placeholder'=>'Enter name']) }}
