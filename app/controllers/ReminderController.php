@@ -22,9 +22,18 @@ class ReminderController extends Controller {
 
 	public function postRemind()
 	{
-		Queue::push(function($job) use(&$response)
+		$email = Input::get('email');
+		$User = User::where('email', '=', $email)->first();
+
+		if(!$User)
+			return Redirect::back()->withInput()->withErrors(['flash_error'=>'Invalid email address']);
+
+		$email_data = Input::only('email');
+
+		// response variable not working with Queue
+		Queue::push(function($job) use(&$response, $email_data)
 		{
-			$response = Password::remind(Input::only('email'), function($message)
+			$response = Password::remind($email_data, function($message)
 			{
 				$message->subject('k2movie - Password Reset');
 			});
@@ -32,14 +41,7 @@ class ReminderController extends Controller {
 			$job->delete();
 		});
 
-		switch ($response)
-		{
-			case Password::INVALID_USER:
-				return Redirect::back()->withInput()->withErrors(['flash_error'=>Lang::get($response)]);
-
-			case Password::REMINDER_SENT:
-				return Redirect::back()->withInput()->with('flash_notice', Lang::get($response));
-		}
+		return Redirect::route('home')->with('flash_notice', 'Please click the reset link inside the email sent to you');
 	}
 
 	public function getReset($token = null)
