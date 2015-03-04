@@ -1,9 +1,8 @@
 <?php
 
-require_once app_path()."/lib/ReCaptcha.php";
-require_once app_path()."/lib/Google2FA.php";
-
 use Carbon\Carbon;
+use Lib\Google2FA\Google2FA;
+use Lib\ReCaptcha\ReCaptcha;
 
 class TsaController extends BaseController {
 
@@ -26,10 +25,9 @@ class TsaController extends BaseController {
 	{
 		$secret_captcha = $_ENV['SECRET_CAPTCHA'];
 		$response_captcha = NULL;
-		$ReCaptcha = new ReCaptcha($secret_captcha);
 
 		if($user_input_recaptcha)
-		    $response_captcha = $ReCaptcha->verifyResponse($user_ip, $user_input_recaptcha);
+		    $response_captcha = ReCaptcha::verifyResponse($user_ip, $user_input_recaptcha, $secret_captcha);
 
 		return $response_captcha;
 	}
@@ -154,7 +152,7 @@ class TsaController extends BaseController {
 			return Redirect::back()->withInput()->withErrors($validator);
 
 		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-		if($response_captcha === NULL || $response_captcha->success !== TRUE)
+		if($response_captcha === NULL || $response_captcha['success'] !== TRUE)
 			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 
 		if(Auth::validate($input)) {

@@ -1,8 +1,7 @@
 <?php
 
-require_once app_path()."/lib/ReCaptcha.php";
-
 Use Carbon\Carbon;
+use Lib\ReCaptcha\ReCaptcha;
 
 class UserController extends BaseController {
 
@@ -29,10 +28,9 @@ class UserController extends BaseController {
 	{
 		$secret_captcha = $_ENV['SECRET_CAPTCHA'];
 		$response_captcha = NULL;
-		$ReCaptcha = new ReCaptcha($secret_captcha);
 
 		if($user_input_recaptcha)
-		    $response_captcha = $ReCaptcha->verifyResponse($user_ip, $user_input_recaptcha);
+		    $response_captcha = ReCaptcha::verifyResponse($user_ip, $user_input_recaptcha, $secret_captcha);
 
 		return $response_captcha;
 	}
@@ -110,7 +108,7 @@ class UserController extends BaseController {
 			return Redirect::back()->withInput()->withErrors($validator);
 
 		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-		if($response_captcha === NULL || $response_captcha->success !== TRUE)
+		if($response_captcha === NULL || $response_captcha['success'] !== TRUE)
 			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
 
 		$credentials = Input::only('email', 'password', 'confirmation_code');
@@ -175,9 +173,9 @@ class UserController extends BaseController {
 		if($validator->fails())
 			return Redirect::back()->withInput()->with(compact('email'))->withErrors($validator);
 
-		if(Input::has('g-recaptcha-response')) {
+		if(Input::has('recaptcha')) {
 			$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
-			if($response_captcha === NULL || $response_captcha->success !== TRUE)
+			if($response_captcha === NULL || $response_captcha['success'] !== TRUE)
 				return Redirect::back()->withInput()->with(compact('email'))->withErrors(['credentials'=>'ReCaptcha failed']);
 		}
 
