@@ -7,15 +7,11 @@ use Carbon\Carbon;
 
 class TsaController extends BaseController {
 
-	protected $Connection;
-	protected $table;
 	protected $hashKey;
 	protected $expire;
 
 	public function __construct()
 	{
-		$this->Connection = DB::connection();
-		$this->table = Config::get('auth.tsa.table');
 		$this->hashKey = Config::get('app.key');
 		$this->expire = Config::get('auth.tsa.expire', 60);
 	}
@@ -66,7 +62,7 @@ class TsaController extends BaseController {
 		return View::make('tsa.login');
 	}
 
-	public function post_login_tsa()
+	public function put_login_tsa()
 	{
 		$rules = ['verification_code'=>'required|digits:6'];
 		$input = Input::only('verification_code');
@@ -103,7 +99,7 @@ class TsaController extends BaseController {
 		return View::make('tsa.remind');
 	}
 
-	public function post_remind_tsa()
+	public function put_remind_tsa()
 	{
 		$rules = ['email'=>'required|email|exists:users'];
 
@@ -144,7 +140,7 @@ class TsaController extends BaseController {
 		return View::make('tsa.remove')->with('tsa_token', $tsa_token);
 	}
 
-	public function post_remove_tsa()
+	public function put_remove_tsa()
 	{
 		$rules = [
 			'email'=>'required|email|exists:users',

@@ -28,7 +28,7 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.login2', 'method'=>'post', 'role'=>'form']) }}
+			{{ Form::open(['route'=>'user.login2', 'method'=>'put', 'role'=>'form']) }}
 				<fieldset disabled>
 					<div class="form-group">
 					{{ Form::label('email', 'Email') }}

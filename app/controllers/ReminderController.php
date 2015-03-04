@@ -50,7 +50,7 @@ class ReminderController extends Controller {
 		return View::make('password.reset')->with('token', $token);
 	}
 
-	public function postReset()
+	public function putReset()
 	{
 		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
 		if($response_captcha === NULL || $response_captcha->success !== TRUE)

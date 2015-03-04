@@ -6,8 +6,21 @@ Use Carbon\Carbon;
 
 class UserController extends BaseController {
 
+	protected $Connection;
+	protected $table;
+	protected $hashKey;
+	protected $expire;
+
+	public function __construct()
+	{
+		$this->Connection = DB::connection();
+		$this->table = Config::get('auth.confirmation.table');
+		$this->hashKey = Config::get('app.key');
+		$this->expire = Config::get('auth.confirmation.expire', 60);
+	}
+
 	/**
-	 * Recaptcha verification
+	 * Recaptcha verification.
 	 * @param  string $user_input_recaptcha
 	 * @param  string $user_ip
 	 * @return object
@@ -22,6 +35,18 @@ class UserController extends BaseController {
 		    $response_captcha = $ReCaptcha->verifyResponse($user_ip, $user_input_recaptcha);
 
 		return $response_captcha;
+	}
+
+	/**
+	 * Generate new token.
+	 * @param  string $email
+	 * @return string
+	 */
+	private function generate_token($email)
+	{
+		$value = str_shuffle(sha1($email.spl_object_hash($this).microtime(true)));
+
+		return hash_hmac('sha1', $value, $this->hashKey);
 	}
 
 	public function register()
@@ -43,37 +68,69 @@ class UserController extends BaseController {
 		if($validator->fails())
 			return Redirect::back()->withInput()->withErrors($validator);
 
-		$confirmation_code = str_random(30);
-		$email_data = ['confirmation_code'=>$confirmation_code];
-
 		$User = new User;
 		$name = Input::get('name');
 		$User->name = $name;
 		$email = Input::get('email');
 		$User->email = $email;
 		$User->password = Hash::make(Input::get('password'));
+		$confirmation_code = $this->generate_token($email);
 		$User->confirmation_code = $confirmation_code;
 		$User->save();
 
-		Mail::queue('emails.auth.activate', $email_data, function($message) use($name, $email) {
+		$confirmation_view = Config::get('auth.confirmation.email');
+		$email_data = ['confirmation_code'=>$confirmation_code];
+
+		Mail::queue($confirmation_view, $email_data, function($message) use($name, $email) {
 			$message->to($email, $name)->subject('k2movie - Account Activation');
 		});
 		
 		return Redirect::route('home')->with('flash_notice', 'Please click the activation link inside the email sent to you');
 	}
 
-	public function activate($confirmation_code)
+	public function activate($confirmation_code = NULL)
 	{
-		$user = User::where('confirmation_code', '=', $confirmation_code)->first();
+		if (is_null($confirmation_code))
+			App::abort(404);
 
-		if(!$user)
-			return Redirect::route('user.login')->withErrors(['credentials'=>'Invalid activation code']);
+		return View::make('user.activate')->with('confirmation_code', $confirmation_code);
+	}
 
-		$user->confirmed = 1;
-		$user->confirmation_code = NULL;
-		$user->save();
+	public function put_activate()
+	{
+		$rules = [
+			'email'=>'required|email|exists:users',
+			'password'=>'required'
+		];
 
-		return Redirect::route('user.login')->with('flash_notice', 'User account activated successfully');
+		$input = Input::only('email', 'password');
+		$validator = Validator::make($input, $rules);
+
+		if($validator->fails())
+			return Redirect::back()->withInput()->withErrors($validator);
+
+		$response_captcha = $this->recaptcha($_POST["g-recaptcha-response"], $_SERVER["REMOTE_ADDR"]);
+		if($response_captcha === NULL || $response_captcha->success !== TRUE)
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'ReCaptcha failed']);
+
+		$credentials = Input::only('email', 'password', 'confirmation_code');
+
+		if(Auth::validate($credentials)) {
+			$User = User::where('confirmation_code', '=', Input::get('confirmation_code'))
+				->where('email', '=', Input::get('email'))
+				->first();
+				
+			if(!$User)
+				return Redirect::back()->withInput()->withErrors(['credentials'=>'Invalid activation code']);
+
+			$User->confirmed = 1;
+			$User->confirmation_code = NULL;
+			$User->save();
+
+			return Redirect::route('home')->with('flash_notice', 'User account activated successfully');
+		} else {
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'Invalid credentials']);
+		}
 	}
 
 	public function login()
@@ -81,7 +138,7 @@ class UserController extends BaseController {
 		return View::make('user.login');
 	}
 
-	public function post_login()
+	public function put_login()
 	{
 		$rules = ['email'=>'required|email|exists:users'];
 
@@ -104,7 +161,7 @@ class UserController extends BaseController {
 		return View::make('user.login2')->with(compact('email', 'login_trial_at'));
 	}
 
-	public function post_login2()
+	public function put_login2()
 	{
 		$rules = [
 			'email'=>'required|email|exists:users',

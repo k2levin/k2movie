@@ -2,7 +2,7 @@
 
 @section('title')
 
-	<title>k2movie - Remind Two Step Authentication</title>
+	<title>k2movie - User Activation</title>
 
 @stop
 
@@ -12,15 +12,9 @@
 		<div class="col-md-3"></div>
 		<div class="col-md-6">
 
-			<h2 align="center"><strong>Remind Two Step Authentication</strong></h2>
+			<h2 align="center"><strong>User Activation</strong></h2>
 
 			<hr />
-
-			@if(Session::has('flash_notice'))
-				<div class="alert alert-info page-alert">
-		    		{{ Session::get('flash_notice') }}
-			    </div>
-			@endif
 
 			@if($errors->first())
 				<div class="alert alert-danger page-alert">
@@ -28,16 +22,20 @@
 				</div>
 			@endif
 
-			{{ Form::open(['route'=>'user.tsa.remind', 'method'=>'put', 'role'=>'form']) }}
+			{{ Form::open(['route'=>'user.activate', 'method'=>'put', 'role'=>'form']) }}
 			  <div class="form-group">
 			  	{{ Form::label('email', 'Email') }}
 			  	{{ Form::text('email', Input::old('email'), ['class'=>'form-control', 'placeholder'=>'Enter email']) }}
 			  </div>
+			  <div class="form-group">
+			  	{{ Form::label('password', 'Password') }}
+			  	{{ Form::password('password', ['class'=>'form-control', 'placeholder'=>'Enter password']) }}
+			  </div>
+			  <div class="g-recaptcha" data-sitekey="6Lc2mgITAAAAAHvgLQPofLKqN2fo0WJxS2BR_LV8"></div>
+			  <br />
+			  {{ Form::hidden('confirmation_code', $confirmation_code) }}
 			  {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
-			  <a class="btn btn-primary" href="{{ route('user.tsa.login') }}" role="button">Cancel</a>
 			{{ Form::close() }}
-
-			<br />
 
 		</div>
 		<div class="col-md-3"></div>
