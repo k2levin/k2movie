@@ -22,7 +22,7 @@ class MovieController extends BaseController {
 		$Movies = Movie::whereRaw(
 			"MATCH(name) AGAINST(? IN BOOLEAN MODE)",
 			array($query)
-		)->paginate($this->pagination_num);
+		)->orderBy('name')->paginate($this->pagination_num);
 
 		$movies_count = $Movies->count();
 
@@ -38,8 +38,7 @@ class MovieController extends BaseController {
 	public function filter($field, $param)
 	{
 		$Movies = Movie::where($field, 'like', '%'.$param.'%')
-			->orderBy('name')
-			->paginate($this->pagination_num);
+			->orderBy('name')->paginate($this->pagination_num);
 
 		$field = ucwords($field);
 		if($param !== '1') {
