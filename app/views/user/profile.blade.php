@@ -25,6 +25,10 @@
 					<td align="right">Email: </td>
 					<td>{{{ $email }}}</td>
 				</tr>
+				<tr>
+					<td align="right">Country: </td>
+					<td>{{{ $country }}}</td>
+				</tr>
 			</table>
 
 			<br />

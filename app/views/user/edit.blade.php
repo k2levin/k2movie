@@ -33,6 +33,10 @@
 			  	{{ Form::label('name', 'Name') }}
 			  	{{ Form::text('name', $name, ['class'=>'form-control', 'placeholder'=>'Enter name']) }}
 			  </div>
+			  <div class="form-group">
+			  	{{ Form::label('country', 'Country') }}
+			  	{{ Form::select('country', $countries, $user_country_id, ['class'=>'form-control']) }}
+			  </div>
 			  @if($tsa_key_exists)
 			  <div class="form-group">
 			  	{{ Form::checkbox('remove_tsa', 'true', false) }}

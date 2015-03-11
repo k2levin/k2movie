@@ -49,7 +49,9 @@ class UserController extends BaseController {
 
 	public function register()
 	{
-		return View::make('user.register');
+		$countries = Country::lists('name');
+
+		return View::make('user.register')->with('countries', $countries);
 	}
 
 	public function post_register()
@@ -57,10 +59,11 @@ class UserController extends BaseController {
 		$rules = [
 			'name'=>'required',
 			'email'=>'required|email|unique:users',
-			'password'=>'required|confirmed|min:6'
+			'password'=>'required|confirmed|min:6',
+			'country'=>'not_in:0'
 		];
 
-		$input = Input::only('name', 'email', 'password', 'password_confirmation');
+		$input = Input::only('name', 'email', 'password', 'password_confirmation', 'country');
 		$validator = Validator::make($input, $rules);
 
 		if($validator->fails())
@@ -72,6 +75,7 @@ class UserController extends BaseController {
 		$email = Input::get('email');
 		$User->email = $email;
 		$User->password = Hash::make(Input::get('password'));
+		$User->country_id = Input::get('country') + 1; // because of DB id start 1 but array key start 0
 		$confirmation_code = $this->generate_token($email);
 		$User->confirmation_code = $confirmation_code;
 		$User->save();
@@ -213,36 +217,45 @@ class UserController extends BaseController {
 
 	public function profile()
 	{
-		$name = Auth::user()->name;
-		$email = Auth::user()->email;
+		$User = Auth::user();
+		$name = $User->name;
+		$email = $User->email;
+		$country = $User->country->name;
 
 		if(Auth::user()->tsa_key)
 			$exists_tsa_key = TRUE;
 		else
 			$exists_tsa_key = FALSE;
 
-		return View::make('user.profile')->with(compact('name', 'email', 'exists_tsa_key'));
+		return View::make('user.profile')->with(compact('name', 'email', 'country', 'exists_tsa_key'));
 	}
 
 	public function edit_profile()
 	{
 		$User = Auth::user();
 		$name = $User->name;
+		$user_country_id = $User->country_id - 1; // because of DB id start 1 but array key start 0
+		$countries = Country::lists('name');
 		$tsa_key_exists = isset($User->tsa_key);
 
-		return View::make('user.edit')->with(compact('name', 'tsa_key_exists'));
+		return View::make('user.edit')->with(compact('name', 'user_country_id', 'countries', 'tsa_key_exists'));
 	}
 
 	public function put_profile()
 	{
-		$rules = ['name'=>'required'];
-		$input = Input::only('name');
+		$rules = [
+			'name'=>'required',
+			'country'=>'not_in:0'
+		];
+		$input = Input::only('name', 'country');
 		$validator = Validator::make($input, $rules);
+
 		if($validator->fails())
 			return Redirect::back()->withInput()->withErrors($validator);
 
 		$User = Auth::user();
 		$User->name = Input::get('name');
+		$User->country_id = Input::get('country') + 1; // because of DB id start 1 but array key start 0
 
 		if(Input::get('remove_tsa'))
 			$User->tsa_key = NULL;
