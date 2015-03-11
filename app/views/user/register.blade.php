@@ -39,6 +39,10 @@
 			  	{{ Form::label('password_confirmation', 'Confirm Password') }}
 			  	{{ Form::password('password_confirmation', ['class'=>'form-control', 'placeholder'=>'Enter password again']) }}
 			  </div>
+			  <div class="form-group">
+			  	{{ Form::label('country', 'Country') }}
+			  	{{ Form::select('country', $countries, '0', ['class'=>'form-control']) }}
+			  </div>
 			  <br />
 			  {{ Form::submit('Submit', ['class'=>'btn btn-primary']) }}
 			  <a class="btn btn-primary" href="{{ route('home') }}" role="button">Cancel</a>
