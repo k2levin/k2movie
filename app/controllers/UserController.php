@@ -155,6 +155,9 @@ class UserController extends BaseController {
 		if($User->confirmed === '1')
 			return Redirect::back()->withInput()->withErrors(['credentials'=>'User already been activated']);
 
+		if($User->updated_at->addMinutes(5) > Carbon::now())
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'Resend email too often, please try again later']);
+
 		$name = $User->name;
 		$email = $User->email;
 		$confirmation_code = $User->confirmation_code;
@@ -165,6 +168,8 @@ class UserController extends BaseController {
 		Mail::queue($confirmation_view, $email_data, function($message) use($name, $email) {
 			$message->to($email, $name)->subject('k2movie - Account Activation');
 		});
+
+		$User->touch(); // update the timestamps
 		
 		return Redirect::route('home')->with('flash_notice', 'Account activation email resend successfully');
 	}
