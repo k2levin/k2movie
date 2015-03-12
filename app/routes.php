@@ -17,6 +17,9 @@ Route::post('user/register', ['as'=>'user.register', 'before'=>'csrf', 'uses'=>'
 Route::get('user/activate/{confirmation_code}', ['as'=>'user.activate', 'uses'=>'UserController@activate']);
 Route::put('user/activate', ['as'=>'user.activate', 'before'=>'csrf', 'uses'=>'UserController@put_activate']);
 
+Route::get('user/register_remail', ['as'=>'user.register_remail', 'uses'=>'UserController@register_remail']);
+Route::put('user/register_remail', ['as'=>'user.register_remail', 'before'=>'csrf', 'uses'=>'UserController@put_register_remail']);
+
 Route::get('user/login', ['as'=>'user.login', 'uses'=>'UserController@login']);
 Route::put('user/login', ['as'=>'user.login', 'before'=>'csrf', 'uses'=>'UserController@put_login']);
 

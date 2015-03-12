@@ -25,6 +25,9 @@
 			@if($errors->first())
 				<div class="alert alert-danger page-alert">
 					{{{ $errors->first() }}}
+					@if(Session::has('is_unconfirmed'))
+						<a class="btn btn-success btn-xs" href="{{ route('user.register_remail') }}" role="button">Resend email</a>
+					@endif
 				</div>
 			@endif
 

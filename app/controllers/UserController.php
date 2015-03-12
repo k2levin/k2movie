@@ -135,6 +135,40 @@ class UserController extends BaseController {
 		}
 	}
 
+	public function register_remail()
+	{
+		return View::make('user.register_remail');
+	}
+
+	public function put_register_remail()
+	{
+		$rules = ['email'=>'required|email|exists:users'];
+
+		$input = Input::only('email');
+		$validator = Validator::make($input, $rules);
+
+		if($validator->fails())
+			return Redirect::back()->withInput()->withErrors($validator);
+
+		$User = User::where('email', '=', Input::get('email'))->first();
+
+		if($User->confirmed === '1')
+			return Redirect::back()->withInput()->withErrors(['credentials'=>'User already been activated']);
+
+		$name = $User->name;
+		$email = $User->email;
+		$confirmation_code = $User->confirmation_code;
+
+		$confirmation_view = Config::get('auth.confirmation.email');
+		$email_data = ['confirmation_code'=>$confirmation_code];
+
+		Mail::queue($confirmation_view, $email_data, function($message) use($name, $email) {
+			$message->to($email, $name)->subject('k2movie - Account Activation');
+		});
+		
+		return Redirect::route('home')->with('flash_notice', 'Account activation email resend successfully');
+	}
+
 	public function login()
 	{
 		return View::make('user.login');
@@ -206,7 +240,9 @@ class UserController extends BaseController {
 			}
 			return Redirect::route('home')->with('flash_notice', 'User login successfully');
 		} else if($confirmed === '0') {
-			return Redirect::back()->withInput()->with(compact('email'))->withErrors(['credentials'=>'User not yet confirmed, please click the activation link inside email']);
+			$is_unconfirmed = TRUE;
+
+			return Redirect::back()->withInput()->with(compact('email', 'is_unconfirmed'))->withErrors(['credentials'=>'User not yet confirmed, please click the activation link inside email']);
 		} else {
 			$User->login_trial_at = Carbon::now();
 			$User->save();
@@ -267,7 +303,7 @@ class UserController extends BaseController {
 
 	public function edit_password()
 	{
-		return View::make('user.changepassword');
+		return View::make('user.change_password');
 	}
 
 	public function put_password()
