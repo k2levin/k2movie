@@ -9,7 +9,7 @@ class HomeController extends BaseController {
 
 	public function sitemap()
 	{
-		$content = file_get_contents(asset('download/sitemap.xml'));
+		$content = file_get_contents('http://cdn-k2movie.k2studio.net/download/sitemap.xml');
 
 		return Response::make($content, 200, ['content-type'=>'application/xml']);
 	}
