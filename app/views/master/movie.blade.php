@@ -17,6 +17,7 @@
 			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
+    <link href="//cdn-k2movie.k2studio.net/css/style.css" rel="stylesheet">
 	</head>
 	<body>
 
@@ -137,6 +138,7 @@
                   <p align="center"><a href="{{{ route('movie.filter', ['category', 'drama']) }}}">Drama</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['category', 'romance']) }}}">Romance</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['category', 'erotic']) }}}">Erotic</a></p>
+                  <p align="center"><a href="{{{ route('movie.filter', ['category', 'war']) }}}">War</a></p>
                 </div>
               </div>
             </div>
@@ -163,6 +165,7 @@
                 <p align="center"><a href="{{{ route('movie.filter', ['language', 'english']) }}}">English</a></p>
                 <p align="center"><a href="{{{ route('movie.filter', ['language', 'chinese']) }}}">Chinese</a></p>
                 <p align="center"><a href="{{{ route('movie.filter', ['language', 'japanese']) }}}">Japanese</a></p>
+                <p align="center"><a href="{{{ route('movie.filter', ['language', 'korean']) }}}">Korean</a></p>
               </div>
             </div>
           </div>
@@ -191,21 +194,22 @@
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '1983']) }}}">1983</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '1987']) }}}">1987</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '1999']) }}}">1999</a></p>
+                  <p align="center"><a href="{{{ route('movie.filter', ['year', '2001']) }}}">2001</a></p>
                 </div>
                 <div class="col-xs-4 col-sm-4 col-md-4">
-                  <p align="center"><a href="{{{ route('movie.filter', ['year', '2001']) }}}">2001</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2002']) }}}">2002</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2003']) }}}">2003</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2006']) }}}">2006</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2008']) }}}">2008</a></p>
-                </div>
-                <div class="col-xs-4 col-sm-4 col-md-4">
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2009']) }}}">2009</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2010']) }}}">2010</a></p>
+                </div>
+                <div class="col-xs-4 col-sm-4 col-md-4">
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2011']) }}}">2011</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2012']) }}}">2012</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2013']) }}}">2013</a></p>
                   <p align="center"><a href="{{{ route('movie.filter', ['year', '2014']) }}}">2014</a></p>
+                  <p align="center"><a href="{{{ route('movie.filter', ['year', '2015']) }}}">2015</a></p>
                 </div>
               </div>
             </div>
@@ -215,6 +219,16 @@
         <!-- /left-sidebar -->
 
         <div class="col-md-9">
+
+          @if(!Auth::check())
+          <a href="{{{ route('user.register') }}}">
+            <h3 align="center">
+              <strong class="blink">Registration k2movie is free for a limited time</strong>
+            </h3>
+          </a>
+          @endif
+
+          <br />
 
           @yield('content')
 
@@ -272,6 +286,7 @@
 		
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdn-k2movie.k2studio.net/js/javascript.js"></script>
 
     @yield('script')
 
