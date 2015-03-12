@@ -114,7 +114,7 @@
     <br />
 
     <!-- footer -->
-    <footer class="footer navbar-default navbar-fixed-bottom">
+    <footer class="footer navbar-default">
       <div class="container">
           <br />
           <ul class="list-inline">
