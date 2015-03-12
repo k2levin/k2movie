@@ -265,6 +265,40 @@ class UserController extends BaseController {
 		return Redirect::route('home')->with('flash_notice', "User's profile updated successfully");
 	}
 
+	public function edit_password()
+	{
+		return View::make('user.changepassword');
+	}
+
+	public function put_password()
+	{
+		$rules = [
+			'old_password'=>'required|min:6',
+			'new_password'=>'required|confirmed|min:6'
+		];
+
+		$input = Input::only('old_password', 'new_password', 'new_password_confirmation');
+		$validator = Validator::make($input, $rules);
+
+		if($validator->fails())
+			return Redirect::back()->withInput()->withErrors($validator);
+
+		$User = Auth::user();
+		$credentials = [
+			'email'=>$User->email,
+			'password'=>Input::get('old_password')
+		];
+
+		if(Auth::validate($credentials)) {
+			$User->password = Hash::make(Input::get('new_password'));
+			$User->save();
+		} else {
+			return Redirect::back()->withErrors(['credentials'=>'Incorrect Old Password']);
+		}
+
+		return Redirect::route('home')->with('flash_notice', 'Password changed successfully');
+	}
+
 	public function logout()
 	{
 		Auth::logout();
