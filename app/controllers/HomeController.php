@@ -4,7 +4,6 @@ class HomeController extends BaseController {
 
 	public function mobile()
 	{
-		// Redirect to this route if device detected mobile browser
 		return View::make('mobile');
 	}
 

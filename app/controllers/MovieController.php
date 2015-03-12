@@ -1,5 +1,7 @@
 <?php
 
+use Lib\MobileBrowser\MobileBrowser;
+
 class MovieController extends BaseController {
 
 	private $pagination_num = 18;
@@ -63,6 +65,9 @@ class MovieController extends BaseController {
 
 	public function preview($movie_link)
 	{
+		// Redirect to the mobile page if device detected as mobile device.
+		MobileBrowser::detect(URL::route('mobile'));
+
 		$Movies = Movie::where('link', '=', $movie_link)->orderBy('name')->first();
 
 		if($Movies->year === '') {
