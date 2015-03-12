@@ -28,6 +28,9 @@ Route::get('user/profile', ['as'=>'user.profile', 'before'=>'auth', 'uses'=>'Use
 Route::get('user/profile/edit', ['as'=>'user.profile.edit', 'before'=>'auth', 'uses'=>'UserController@edit_profile']);
 Route::put('user/profile/edit', ['as'=>'user.profile.edit', 'before'=>'csrf', 'uses'=>'UserController@put_profile']);
 
+Route::get('user/profile/password/edit', ['as'=>'user.profile.password.edit', 'before'=>'auth', 'uses'=>'UserController@edit_password']);
+Route::put('user/profile/password/edit', ['as'=>'user.profile.password.edit', 'before'=>'csrf', 'uses'=>'UserController@put_password']);
+
 Route::get('user/logout', ['as'=>'user.logout', 'before'=>'auth', 'uses'=>'UserController@logout']);
 
 // Reminder

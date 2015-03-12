@@ -33,6 +33,8 @@
 
 			<br />
 
+			<p><a class="btn btn-danger btn-sm" href="{{ route('user.profile.password.edit') }}">Change Password</a></p>
+
 			@if(!$exists_tsa_key)
 			<p><a class="btn btn-info btn-sm" href="{{ route('user.tsa.setup') }}" role="button">Enable</a> Two Step Authentication</p>
 			<br />
