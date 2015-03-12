@@ -15,7 +15,7 @@ class CreateCountriesTable extends Migration {
 
 		Schema::table('users', function($table)
 		{
-			$table->integer('country_id')->unsigned()->after('name');
+			$table->integer('country_id')->unsigned()->default(1)->after('name');
 		});
 
 		Schema::table('users', function($table)
